@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@import "nativewind/theme";
+
+@theme {
+  --color-primary: #1b5e20;
+  --color-secondary: #414141;
+
+  --font-sans: Poppins-regular;
+  --font-sans-light: Poppins-Light;
+  --font-sans-medium: Poppins-Medium;
+  --font-sans-semibold: Poppins-SemiBold;
+  --font-sans-bold: Poppins-Bold;
+  --font-sans-extrabold: Poppins-ExtraBold;
+}
