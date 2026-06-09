@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, ScrollView,
   StyleSheet, KeyboardAvoidingView, Platform, Image,
+  Button,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -52,17 +53,17 @@ type Message = {
 };
 
 const INITIAL_MSGS: Message[] = [
-  { id: '1', sender: 'Dr. K. Dagyeng', dept: 'Media & Comms',  text: 'Good morning team. DSA press release ready for review — check the shared drive.', time: '08:14', me: false },
-  { id: '2', sender: 'Eng. O. Ajayi',  dept: 'Remote Sensing', text: 'NigeriaSAT-2 pass over Lagos at 10:23. Tasking submitted to SERA Mission Control.',  time: '08:31', me: false },
-  { id: '3', sender: 'Me',             dept: '',                text: 'Received. Will confirm the window shortly.',                                           time: '08:35', me: true  },
-  { id: '4', sender: 'Admin. F. Bello',dept: 'HR',              text: 'Reminder: Youth Empowerment briefing at 14:00, main boardroom, Lugbe HQ.',            time: '09:02', me: false },
-  { id: '5', sender: 'Me',             dept: '',                text: "Noted, I'll be there.",                                                               time: '09:05', me: true  },
+  { id: '1', sender: 'Dr. K. Dagyeng', dept: 'Media & Comms', text: 'Good morning team. DSA press release ready for review — check the shared drive.', time: '08:14', me: false },
+  { id: '2', sender: 'Eng. O. Ajayi', dept: 'Remote Sensing', text: 'NigeriaSAT-2 pass over Lagos at 10:23. Tasking submitted to SERA Mission Control.', time: '08:31', me: false },
+  { id: '3', sender: 'Me', dept: '', text: 'Received. Will confirm the window shortly.', time: '08:35', me: true },
+  { id: '4', sender: 'Admin. F. Bello', dept: 'HR', text: 'Reminder: Youth Empowerment briefing at 14:00, main boardroom, Lugbe HQ.', time: '09:02', me: false },
+  { id: '5', sender: 'Me', dept: '', text: "Noted, I'll be there.", time: '09:05', me: true },
 ];
 
 const ChatScreen: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
-  const [msgs,  setMsgs]  = useState<Message[]>(INITIAL_MSGS);
+  const [msgs, setMsgs] = useState<Message[]>(INITIAL_MSGS);
   const [draft, setDraft] = useState('');
-  const insets    = useSafeAreaInsets();
+  const insets = useSafeAreaInsets();
   const scrollRef = useRef<ScrollView>(null);
 
   const send = () => {
@@ -142,16 +143,43 @@ const ChatScreen: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
   );
 };
 
+const DashboardScreen: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
+  return (
+  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: -40 }}>
+    <Text style={{ fontSize: 18, color: colors.textPrimary }}>Welcome to the NASRDA Staff Portal</Text>
+    <Text style={{ fontSize: 14, color: colors.textSecond, marginTop: 8 }}>
+      Access internal communications, mission data, and more.
+    </Text>
+ <TouchableOpacity onPress={onLogout} style={st.logoutBtn}>
+          <Ionicons name="log-out-outline" size={20} color={colors.textThird} />
+        </TouchableOpacity>
+
+    {/* Buttton For Account Settings, Staff Email, Chat  */}
+    <View style={{ marginTop: 60, gap: 12 }}>
+      <View style={st.actionSettingsBtn}>
+        <Text style={st.actionSettingsTxt} onPress={() => alert('Account settings coming soon!')} >Account Settings</Text>
+      </View>
+      <View style={st.staffEmailBtn}>
+        <Text style={st.staffEmailTxt} onPress={() => alert('Chat feature coming soon!')}>Staff Email</Text>
+      </View>
+      <View style={st.staffChatBtn}>
+        <Text style={st.staffChatTxt} onPress={() => alert('Chat feature coming soon!')}>Staff Chat</Text>
+      </View>
+    </View>
+  </View>
+  );
+};
+
 /* ── StaffScreen wrapper ─────────────────────────────────────── */
 export const StaffScreen: React.FC = () => {
-  const insets  = useSafeAreaInsets();
+  const insets = useSafeAreaInsets();
   const [authed, setAuthed] = useState(false);
 
   return (
     <View style={[st.root, { paddingTop: insets.top }]}>
       <View style={st.nav}>
         <NavLogo />
-        <Text style={st.navTitle}>{authed ? '#general' : 'Staff Portal'}</Text>
+        <Text style={st.navTitle}>{authed ? 'Dashboard' : 'Staff Portal'}</Text>
         {authed && (
           <View style={st.securedBadge}>
             <Ionicons name="shield-checkmark" size={12} color={colors.green2} />
@@ -161,7 +189,7 @@ export const StaffScreen: React.FC = () => {
       </View>
 
       {authed
-        ? <ChatScreen onLogout={() => setAuthed(false)} />
+        ? <DashboardScreen onLogout={() => setAuthed(false)} />
         : <LoginScreen onLogin={() => setAuthed(true)} />
       }
     </View>
@@ -232,6 +260,25 @@ const st = StyleSheet.create({
   },
   secNoteTxt: { fontSize: 11, color: colors.textThird },
 
+  // dashboard action buttons
+  actionSettingsBtn: { backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 10, padding: 12,  borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)' },
+  actionSettingsTxt: { fontSize: 13, fontWeight: 900, color: colors.textPrimary, paddingHorizontal: 10, textAlign: 'center' },
+
+  // staff Email Button
+  staffEmailBtn: {
+    backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 10,
+     borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)',
+    paddingVertical: 12, paddingHorizontal: 20,
+  },
+  staffEmailTxt: { fontSize: 13, fontWeight: 900, color: colors.textPrimary, textAlign: 'center' },
+
+  staffChatBtn: {
+    backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 10,
+     borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)',
+    paddingVertical: 12, paddingHorizontal: 20,
+  },
+  staffChatTxt: { fontSize: 13, fontWeight: 900, color: colors.textPrimary, textAlign: 'center' },
+
   /* Chat */
   chatHeader: {
     paddingVertical: 12, paddingHorizontal: 20,
@@ -240,30 +287,30 @@ const st = StyleSheet.create({
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
   },
   chatHeaderLeft: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  chatRoom:    { fontSize: 14, fontWeight: '700', color: '#fff', marginBottom: 2 },
-  onlineRow:   { flexDirection: 'row', alignItems: 'center', gap: 5 },
-  onlineDot:   { width: 6, height: 6, borderRadius: 3, backgroundColor: colors.green2 },
-  onlineTxt:   { fontSize: 11, color: colors.green2, fontWeight: '600' },
+  chatRoom: { fontSize: 14, fontWeight: '700', color: '#fff', marginBottom: 2 },
+  onlineRow: { flexDirection: 'row', alignItems: 'center', gap: 5 },
+  onlineDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: colors.green2 },
+  onlineTxt: { fontSize: 11, color: colors.green2, fontWeight: '600' },
   logoutBtn: {
     width: 36, height: 36, borderRadius: 10,
     alignItems: 'center', justifyContent: 'center',
     backgroundColor: 'rgba(255,255,255,0.05)',
   },
-  msgs:        { flex: 1 },
+  msgs: { flex: 1 },
   msgsContent: { padding: 16, gap: 4 },
-  msgWrap:     { maxWidth: '82%', alignSelf: 'flex-start', marginBottom: 12 },
-  msgWrapMe:   { alignSelf: 'flex-end', alignItems: 'flex-end' },
-  msgSender:   { fontSize: 10, color: colors.textThird, marginBottom: 4, paddingLeft: 2 },
-  bubble:      { borderRadius: 18, paddingVertical: 10, paddingHorizontal: 14 },
-  bubbleMe:    { backgroundColor: colors.green, borderBottomRightRadius: 4 },
-  bubbleThem:  {
+  msgWrap: { maxWidth: '82%', alignSelf: 'flex-start', marginBottom: 12 },
+  msgWrapMe: { alignSelf: 'flex-end', alignItems: 'flex-end' },
+  msgSender: { fontSize: 10, color: colors.textThird, marginBottom: 4, paddingLeft: 2 },
+  bubble: { borderRadius: 18, paddingVertical: 10, paddingHorizontal: 14 },
+  bubbleMe: { backgroundColor: colors.green, borderBottomRightRadius: 4 },
+  bubbleThem: {
     backgroundColor: colors.card2,
     borderWidth: 1, borderColor: colors.border,
     borderBottomLeftRadius: 4,
   },
-  bubbleTxt:   { fontSize: 13, lineHeight: 19, color: colors.textPrimary },
+  bubbleTxt: { fontSize: 13, lineHeight: 19, color: colors.textPrimary },
   bubbleTxtMe: { color: '#fff' },
-  msgTime:     { fontSize: 9, color: colors.textThird, marginTop: 4, paddingHorizontal: 2 },
+  msgTime: { fontSize: 9, color: colors.textThird, marginTop: 4, paddingHorizontal: 2 },
 
   inputBar: {
     flexDirection: 'row', alignItems: 'center', gap: 10,

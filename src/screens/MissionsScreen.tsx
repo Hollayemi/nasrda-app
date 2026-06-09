@@ -15,8 +15,7 @@ const SAT_IMAGES = {
   nigeriasatX:  'https://central.nasrda.gov.ng/wp-content/uploads/2025/03/NigeriaSAT-X.png',
   nigcomsat1r:  'https://central.nasrda.gov.ng/wp-content/uploads/2025/03/NigComSat-1R.jpg',
   nigcomsat1:   'https://central.nasrda.gov.ng/wp-content/uploads/2025/03/NigComSat-1.jpeg',
-  // EduSAT has no official image yet — use a generic space placeholder
-  edusat:       'https://central.nasrda.gov.ng/wp-content/uploads/2025/02/NASRDA-Logo_N2.png',
+  edusat:       'https://central.nasrda.gov.ng/wp-content/uploads/2025/03/Edu-sat.jpg',
 };
 
 type Mission = {
@@ -44,7 +43,7 @@ const MISSIONS: Mission[] = [
     launched: '2011',
     orbit: 'Sun-synchronous LEO',
     details:
-      'NigeriaSAT-2 is a 300kg high-resolution Earth observation satellite built by Surrey Satellite Technology Ltd (SSTL). It provides 2.5m GSD panchromatic and 5m GSD multispectral imagery across a 20×20km swath, supporting mapping, water resources, agriculture, and disaster management.',
+      'NigeriaSat-2.is a joint satellite program proposed by South Africa and supported by, Nigeria, Algeria and Kenya.  would form the cornerstone of the African Resource Management (ARM) Constellation satellites, to make African user community have access to real-time, unrestricted, and affordable satellite data, thereby ensuring effective resource and environmental management in Africa. The countries involved would collaborate in building capacity to support and transfer space technology, building on the existing indigenous knowledge. Participating countries to agree on the modality for the building and launching of the satellites and the coordination of the constellation.',
   },
   {
     name: 'NigComSat-1R',
@@ -57,7 +56,7 @@ const MISSIONS: Mission[] = [
     launched: 'Dec 20, 2011',
     orbit: 'GEO 42.5°E',
     details:
-      'NigComSat-1R is based on the DFH-4 platform by CAST, fitted with 28 transponders across Ka/Ku/C/L bands. It replaced the failed NigComSat-1 and serves sub-Saharan Africa, Europe and Central Asia with a 15-year design life.',
+      'The NigComSat-1R satellite is based on the DFH-4 satellite platform developed by China Academy of Space Technology (CAST). Fitted with a total of 28 transponders ( 8 Ka-band, 14 Ku-band, 4 C-band and 2 L-band), the satellite will be positioned at a longitude of 42.5°E over the equator, and will have a design life span of 15 years.',
   },
   {
     name: 'Nigeria EduSAT',
@@ -70,7 +69,11 @@ const MISSIONS: Mission[] = [
     launched: 'TBD',
     orbit: 'LEO (planned)',
     details:
-      'Nigeria EduSAT is a planned educational satellite designed to support STEM education and research capacity development across Nigerian universities and secondary schools.',
+      `NASRDA in collaboration with the Federal University of Technology Akure (FUTA) built and launched a nano-satellite code named NigeriaEdusat-1.The collaboration was in conjunction with the Japanese Birds-1 program which comprises Japan, Ghana, Mongolia, Nigeria and Bangladesh universities which was hosted by Kyushu Institute of Technology, Japan. It was launched from the Kennedy Space Center in Florida, USA into orbit on 3rd of June, 2017.
+
+The five satellite from the Japanese Birds-1 program were launched and docked to the International Space Station from the Japanese Kibō module.
+
+The satellite orbited the Earth at an altitude of 400 kilometers (250 mi) and at an inclination of 51.61 degrees. The satellite traveled around the Earth every 92 minutes at a velocity of 7.67 kilometers per second (17,200 mph).`
   },
   {
     name: 'NigeriaSAT-1',
@@ -83,7 +86,9 @@ const MISSIONS: Mission[] = [
     launched: 'Sep 27, 2003',
     orbit: 'Sun-synchronous 700km',
     details:
-      'NigeriaSAT-1 was launched from Plesetsk, Russia as part of the 5-nation Disaster Monitoring Constellation (DMC). Built by SSTL, it carried a 32m GSD multispectral camera and served for over a decade before decommissioning in 2014.',
+      `On September 2003 Nigeria launched its $13 million national satellite NigeriaSat-1 in Plesetsk, Russia under a seven-nation constellation handled by a Russian firm, Cosmos. Nigeriasat-1 is a low earth orbit micro satellite for disaster monitoring looking spacecraft, 5-year target design life-span orbit 700km.NigeriaSat-1 is one of five satellites in a network called the Disaster Monitoring Constellation (DMC). The other partners in the international consortium are UK, China, Algeria, Turkey, Thailand and Vietnam. Each satellite belongs to one country, and share information with each other when disaster monitoring is needed. The Disaster Monitoring Constellation satellites, were built by a British-based company, Surrey Satellite Technology(SSTL), which also trained technicians from Nigeria and some of the other countries involved. The processed images from the DMC are distributed to relief teams by the Reuters AlterNet Foundation. The Reuters Foundation launched AlertNet in 1997 to help the work of relief professionals around the world.
+
+NigeriaSat-1 has 3 spectral bands namely; Green: 0.52-0.62µm, Red: 0.63-0.69 µm and NIR: 0.76-0.9 µm. It is one of the Disaster Monitoring Constellation (DMC) satellites and has a swath width of 600km and revisit cycle of 3-5 days. It has spectral resolution comparable to SPOT XS and spatial resolution comparable to Landsat TM. The camera is operated in two banks and used to produce images with approximately 32 m ground sampling distance (spatial resolution), across a swath width of approximately 600 x 600 km.`
   },
   {
     name: 'NigeriaSAT-X',
@@ -96,7 +101,9 @@ const MISSIONS: Mission[] = [
     launched: 'Aug 17, 2011',
     orbit: 'Sun-synchronous LEO',
     details:
-      'NigeriaSAT-X was built by 25 Nigerian engineers and scientists under SSTL\'s Know How Technology Transfer program. The 100kg microsatellite features a 22m multispectral imager with 600km swath and was launched via DNEPR from Yasny, Russia.',
+      `Nigeriasat- X was built as a flight ready training model by 25 Nigerian engineers and scientists who participated in the Know How Technology Program of Nigeriasat-2 that was built in conjunction with Surrey Satellite Technology Limited (SSTL). The aim of building Nigerisat-X (NX) was to build the capacity of the Nigerian Engineers/scientist as well as to serve as a compliment to Nigeriasat-1 whose design lifespan was nearly over.
+
+NX was built alongside Nigeriasat-2 and features a 22-meter multi spectral imaging system with a swath with of 600km and weighs 100kg. It has a design life span of 5 years and revisit time of 3 to 5 days. It was launched into the sun-synchronous low earth orbit using the DNEPR launch vehicle in Ukraine by the 17th of august 2011.`,
   },
   {
     name: 'NigComSat-1',
@@ -109,7 +116,7 @@ const MISSIONS: Mission[] = [
     launched: 'May 13, 2007',
     orbit: 'GEO 42.5°E',
     details:
-      'NigComSat-1, built by CAST, was Nigeria\'s first geostationary communications satellite. Positioned at 42.5°E, it carried C-band and Ku-band transponders. A solar array anomaly caused it to fail in November 2008 and was replaced by NigComSat-1R.',
+      'NIGCOMSAT-1 is the first communications satellite launched by Nigeria, aiming to improve communication infrastructure in the country. It was Launched on the 13th of May, 2007. It is a Geostationary Satellite positioned at 42.5° East longitude over the equator. The satellite was built by China Academy of Space Technology (CAST) in collaboration with Nigerian authorities. It is in a geostationary orbit, meaning it remains fixed relative to a specific point on Earth, offering consistent coverage of the same geographical area. NIGCOMSAT-1 carries both C-band and Ku-band transponders, which are used for telecommunication services like broadcasting, telephony, and internet services. The satellite weights approximately 5,000 kg and has a design lifetime of about 15 years.',
   },
 ];
 

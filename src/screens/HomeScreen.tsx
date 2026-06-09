@@ -15,17 +15,17 @@ const LOGO = { uri: NASRDA_LOGO_URI };
 /* ── Real NASRDA image URLs sourced from central.nasrda.gov.ng ── */
 const NASRDA_IMAGES = {
   /** NASRDA + UNDRR/ECHO-ECOWAS partnership meeting, May 2026 */
-  undrr:        'https://central.nasrda.gov.ng/wp-content/uploads/2026/05/NASRDA-UNDRR-ECHO-ECOWAS-1-768x546.jpeg',
+  undrr: 'https://central.nasrda.gov.ng/wp-content/uploads/2026/05/NASRDA-UNDRR-ECHO-ECOWAS-1-768x546.jpeg',
   /** NASRDA SME / Access Bank commercialisation event, May 2026 */
-  sme:          'https://central.nasrda.gov.ng/wp-content/uploads/2026/05/NASRDA-SME-Access-Bank-768x549.jpeg',
+  sme: 'https://central.nasrda.gov.ng/wp-content/uploads/2026/05/NASRDA-SME-Access-Bank-768x549.jpeg',
   /** NASRDA Headquarters gate, Lugbe Abuja */
-  hq:           'https://central.nasrda.gov.ng/wp-content/uploads/2025/04/NASRDA_Gate1.jpg',
+  hq: 'https://central.nasrda.gov.ng/wp-content/uploads/2025/04/NASRDA_Gate1.jpg',
   /** DG Dr Matthew Adepoju 3-point agenda briefing */
-  dg:           'https://central.nasrda.gov.ng/wp-content/uploads/2025/04/DG-3-point-Agenda-1.jpg',
+  dg: 'https://central.nasrda.gov.ng/wp-content/uploads/2025/04/DG-3-point-Agenda-1.jpg',
   /** UNDRR event - group session */
-  undrr2:       'https://central.nasrda.gov.ng/wp-content/uploads/2026/05/NASRDA-UNDRR-ECHO-ECOWAS-2-1024x731.jpeg',
+  undrr2: 'https://central.nasrda.gov.ng/wp-content/uploads/2026/05/NASRDA-UNDRR-ECHO-ECOWAS-2-1024x731.jpeg',
   /** UNDRR event - presentation */
-  undrr3:       'https://central.nasrda.gov.ng/wp-content/uploads/2026/05/NASRDA-UNDRR-ECHO-ECOWAS-3-1024x731.jpeg',
+  undrr3: 'https://central.nasrda.gov.ng/wp-content/uploads/2026/05/NASRDA-UNDRR-ECHO-ECOWAS-3-1024x731.jpeg',
 };
 
 const OrbitRing: React.FC<{
@@ -71,11 +71,11 @@ const PulsingGlow: React.FC = () => {
     Animated.loop(Animated.sequence([
       Animated.parallel([
         Animated.timing(s, { toValue: 1.55, duration: 1800, useNativeDriver: true }),
-        Animated.timing(o, { toValue: 0.9,  duration: 1800, useNativeDriver: true }),
+        Animated.timing(o, { toValue: 0.9, duration: 1800, useNativeDriver: true }),
       ]),
       Animated.parallel([
-        Animated.timing(s, { toValue: 1,    duration: 1800, useNativeDriver: true }),
-        Animated.timing(o, { toValue: 0.4,  duration: 1800, useNativeDriver: true }),
+        Animated.timing(s, { toValue: 1, duration: 1800, useNativeDriver: true }),
+        Animated.timing(o, { toValue: 0.4, duration: 1800, useNativeDriver: true }),
       ]),
     ])).start();
   }, []);
@@ -100,10 +100,10 @@ const SpinRing: React.FC = () => {
     <Animated.View style={{
       position: 'absolute', width: 104, height: 104, borderRadius: 52,
       borderWidth: 3,
-      borderTopColor:    colors.green2,
-      borderRightColor:  colors.sky,
+      borderTopColor: colors.green2,
+      borderRightColor: colors.sky,
       borderBottomColor: colors.gold,
-      borderLeftColor:   colors.green,
+      borderLeftColor: colors.green,
       transform: [{ rotate }],
     }} />
   );
@@ -114,7 +114,7 @@ const BlinkDot: React.FC = () => {
   useEffect(() => {
     Animated.loop(Animated.sequence([
       Animated.timing(o, { toValue: 0.15, duration: 600, useNativeDriver: true }),
-      Animated.timing(o, { toValue: 1,    duration: 600, useNativeDriver: true }),
+      Animated.timing(o, { toValue: 1, duration: 600, useNativeDriver: true }),
     ])).start();
   }, []);
   return (
@@ -129,9 +129,9 @@ const Stars: React.FC = () => {
   const stars = useRef(
     Array.from({ length: 55 }, (_, i) => ({
       key: i,
-      left:    Math.random() * 100,
-      top:     Math.random() * 100,
-      size:    Math.random() * 1.8 + 0.4,
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      size: Math.random() * 1.8 + 0.4,
       opacity: Math.random() * 0.6 + 0.15,
     }))
   ).current;
@@ -194,122 +194,122 @@ export const HomeScreen: React.FC = () => {
   return (
     <View style={[st.root, { paddingTop: insets.top }]}>
       <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
-
-      {/* ── Hero ── */}
-      <View style={st.hero}>
-        <Stars />
-
-        {/* Top actions */}
-        <View style={st.topBar}>
-          <TouchableOpacity style={st.topBtn}>
-            <Ionicons name="notifications-outline" size={20} color="rgba(232,240,248,0.8)" />
-          </TouchableOpacity>
-          <TouchableOpacity style={st.topBtn}>
-            <Ionicons name="search-outline" size={20} color="rgba(232,240,248,0.8)" />
-          </TouchableOpacity>
-        </View>
-
-        {/* Orbit system */}
-        <View style={st.orbitWrap}>
-          <PulsingGlow />
-          <OrbitRing size={240} borderColor="rgba(0,166,81,0.28)"   dotColor={colors.green2} duration={9000} />
-          <OrbitRing size={186} borderColor="rgba(79,195,247,0.18)" dotColor={colors.gold}   duration={5500} reverse />
-          <OrbitRing size={132} borderColor="rgba(245,168,0,0.2)"   dotColor={colors.sky}    duration={13000} dashed />
-          <SpinRing />
-          <View style={st.logoDisc}>
-            <Image source={LOGO} style={st.logoImg} resizeMode="contain" />
-          </View>
-        </View>
-
-        {/* Agency name */}
-        <View style={st.heroText}>
-          <Text style={st.agencyName}>NATIONAL SPACE RESEARCH{'\n'}& DEVELOPMENT AGENCY</Text>
-          <Text style={st.agencySub}>NIGERIA · EST. 1999</Text>
-          <View style={st.liveBadge}>
-            <BlinkDot />
-            <Text style={st.liveText}>NigeriaSAT-2 IN ORBIT</Text>
-          </View>
-        </View>
-      </View>
-
-      {/* ── News feed ── */}
       <ScrollView
         style={st.feed}
-        contentContainerStyle={st.feedContent}
+        // contentContainerStyle={}
         showsVerticalScrollIndicator={false}
       >
-        {/* Section header */}
-        <View style={st.sectionHdr}>
-          <Text style={st.sectionTitle}>Featured News</Text>
-          <TouchableOpacity
-            style={st.seeAllBtn}
-            onPress={() => router.push('/(tabs)/news')}
-          >
-            <Text style={st.seeAll}>See all</Text>
-            <Ionicons name="chevron-forward" size={13} color={colors.green2} />
-          </TouchableOpacity>
-        </View>
+        {/* ── Hero ── */}
+        <View style={st.hero}>
+          <Stars />
 
-        {/* Featured card — real NASRDA image */}
-        <TouchableOpacity
-          style={st.featCard}
-          onPress={() => router.push('/(tabs)/news')}
-          activeOpacity={0.85}
-        >
-          {/* Real photo from NASRDA website */}
-          <Image
-            source={{ uri: NASRDA_IMAGES.undrr }}
-            style={st.featBgImage}
-            resizeMode="cover"
-          />
-          {/* Dark scrim so text remains legible */}
-          <View style={st.featScrim} />
-          {/* Content */}
-          <View style={st.featContent}>
-            <View style={st.tag}>
-              <Text style={st.tagTxt}>PARTNERSHIP</Text>
-            </View>
-            <Text style={st.featTitle} numberOfLines={2}>
-              NASRDA & DSA Strengthen Nigeria's Space Ecosystem
-            </Text>
-            <View style={st.featMetaRow}>
-              <Ionicons name="time-outline" size={11} color="rgba(232,240,248,0.7)" />
-              <Text style={st.featMeta}>June 2025 · 3 min read</Text>
-              <Ionicons name="chevron-forward" size={14} color={colors.green2} style={{ marginLeft: 'auto' }} />
+          {/* Top actions */}
+          <View style={st.topBar}>
+            <TouchableOpacity style={st.topBtn}>
+              <Ionicons name="notifications-outline" size={20} color="rgba(232,240,248,0.8)" />
+            </TouchableOpacity>
+            <TouchableOpacity style={st.topBtn}>
+              <Ionicons name="search-outline" size={20} color="rgba(232,240,248,0.8)" />
+            </TouchableOpacity>
+          </View>
+
+          {/* Orbit system */}
+          <View style={st.orbitWrap}>
+            <PulsingGlow />
+            <OrbitRing size={240} borderColor="rgba(0,166,81,0.28)" dotColor={colors.green2} duration={9000} />
+            <OrbitRing size={186} borderColor="rgba(79,195,247,0.18)" dotColor={colors.gold} duration={5500} reverse />
+            <OrbitRing size={132} borderColor="rgba(245,168,0,0.2)" dotColor={colors.sky} duration={13000} dashed />
+            <SpinRing />
+            <View style={st.logoDisc}>
+              <Image source={LOGO} style={st.logoImg} resizeMode="contain" />
             </View>
           </View>
-        </TouchableOpacity>
 
-        {/* Divider label */}
-        <Text style={st.dividerLabel}>LATEST UPDATES</Text>
+          {/* Agency name */}
+          <View style={st.heroText}>
+            <Text style={st.agencyName}>NATIONAL SPACE RESEARCH{'\n'}& DEVELOPMENT AGENCY</Text>
+            <Text style={st.agencySub}>NIGERIA · EST. 1999</Text>
+            <View style={st.liveBadge}>
+              <BlinkDot />
+              <Text style={st.liveText}>NigeriaSAT-2 IN ORBIT</Text>
+            </View>
+          </View>
+        </View>
 
-        {/* News rows — each with a real NASRDA thumbnail */}
-        {news.map((n, i) => (
+        {/* ── News feed ── */}
+        <View style={st.feedContent}>
+          {/* Section header */}
+          <View style={st.sectionHdr}>
+            <Text style={st.sectionTitle}>Featured News</Text>
+            <TouchableOpacity
+              style={st.seeAllBtn}
+              onPress={() => router.push('/(tabs)/news')}
+            >
+              <Text style={st.seeAll}>See all</Text>
+              <Ionicons name="chevron-forward" size={13} color={colors.green2} />
+            </TouchableOpacity>
+          </View>
+
+          {/* Featured card — real NASRDA image */}
           <TouchableOpacity
-            key={i}
-            style={[st.newsRow, i === news.length - 1 && { borderBottomWidth: 0 }]}
-            onPress={() => router.push(n.route)}
-            activeOpacity={0.8}
+            style={st.featCard}
+            onPress={() => router.push('/(tabs)/news')}
+            activeOpacity={0.85}
           >
-            {/* Real image thumbnail */}
-            <View style={st.newsThumb}>
-              <Image
-                source={{ uri: n.imageUri }}
-                style={st.newsThumbImg}
-                resizeMode="cover"
-              />
-              {/* Tinted overlay */}
-              <View style={st.newsThumbOverlay} />
+            {/* Real photo from NASRDA website */}
+            <Image
+              source={{ uri: NASRDA_IMAGES.undrr }}
+              style={st.featBgImage}
+              resizeMode="cover"
+            />
+            {/* Dark scrim so text remains legible */}
+            <View style={st.featScrim} />
+            {/* Content */}
+            <View style={st.featContent}>
+              <View style={st.tag}>
+                <Text style={st.tagTxt}>PARTNERSHIP</Text>
+              </View>
+              <Text style={st.featTitle} numberOfLines={2}>
+                NASRDA & DSA Strengthen Nigeria's Space Ecosystem
+              </Text>
+              <View style={st.featMetaRow}>
+                <Ionicons name="time-outline" size={11} color="rgba(232,240,248,0.7)" />
+                <Text style={st.featMeta}>June 2025 · 3 min read</Text>
+                <Ionicons name="chevron-forward" size={14} color={colors.green2} style={{ marginLeft: 'auto' }} />
+              </View>
             </View>
-            <View style={st.newsBody}>
-              <Text style={[st.newsTag, { color: n.tagColor }]}>{n.tag}</Text>
-              <Text style={st.newsTitle} numberOfLines={2}>{n.title}</Text>
-              <Text style={st.newsDate}>{n.date}</Text>
-            </View>
-            <Ionicons name="chevron-forward" size={14} color={colors.textThird} style={{ marginTop: 2 }} />
           </TouchableOpacity>
-        ))}
 
+          {/* Divider label */}
+          <Text style={st.dividerLabel}>LATEST UPDATES</Text>
+
+          {/* News rows — each with a real NASRDA thumbnail */}
+          {news.map((n, i) => (
+            <TouchableOpacity
+              key={i}
+              style={[st.newsRow, i === news.length - 1 && { borderBottomWidth: 0 }]}
+              onPress={() => router.push(n.route)}
+              activeOpacity={0.8}
+            >
+              {/* Real image thumbnail */}
+              <View style={st.newsThumb}>
+                <Image
+                  source={{ uri: n.imageUri }}
+                  style={st.newsThumbImg}
+                  resizeMode="cover"
+                />
+                {/* Tinted overlay */}
+                <View style={st.newsThumbOverlay} />
+              </View>
+              <View style={st.newsBody}>
+                <Text style={[st.newsTag, { color: n.tagColor }]}>{n.tag}</Text>
+                <Text style={st.newsTitle} numberOfLines={2}>{n.title}</Text>
+                <Text style={st.newsDate}>{n.date}</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={14} color={colors.textThird} style={{ marginTop: 2 }} />
+            </TouchableOpacity>
+          ))}
+        </View>
         <View style={{ height: 24 }} />
       </ScrollView>
     </View>

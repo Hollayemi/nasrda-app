@@ -12,7 +12,7 @@ type Centre = {
   accentColor: string;
   url: string;
   desc: string;
-  labs: string[];
+  // labs: string[];
   imageUri: string;
 };
 
@@ -23,8 +23,8 @@ const CENTRES: Centre[] = [
     loc: 'Ayingba, Kogi',
     accentColor: colors.sky,
     url: 'https://carnasrda.com',
-    desc: 'World-class R&D in atmospheric sciences — from ocean floor through the ionosphere to the Sun.',
-    labs: ['Satellite Technology Lab', 'Ionospheric Research Lab', 'Weather Monitoring Lab'],
+    desc: 'The NASRDA Centre for Atmospheric Research (CAR) is a world class research and development center committed to research and capacity building in the atmospheric and related sciences. CAR is dedicated to understanding the atmosphere—the air around us—and the interconnected processes that make up the Earth system, from the ocean floor through the ionosphere to the Sun’s core.',
+    // labs: ['Satellite Technology Lab', 'Ionospheric Research Lab', 'Weather Monitoring Lab'],
     // Ionosphere / atmospheric science image
     imageUri: NASRDA_LOGO_URI,
   },
@@ -34,9 +34,22 @@ const CENTRES: Centre[] = [
     loc: 'Nsukka, Enugu',
     accentColor: colors.green2,
     url: 'https://www.nasrdacbss.com',
-    desc: 'Promotes astronomy, astrophysics and space science education across Nigeria. Est. 2001.',
-    labs: ['Astronomy Lab', 'Astrophysics Lab'],
+    desc: `The Centre for Basic Space Science and Astronomy (CBSS), Nsukka was established in 2001 as one of the Activity Centres of the National Space Research and Development Agency (NASRDA) with Emeritus Prof. P. N. Okeke as the pioneer Director. He was later succeeded by Late Prof. F. E. Opara. Currently, Dr. B. I. Okere is the Director.
+
+From inception in 2001, the Centre operated from her temporal office at the Nsukka Campus of the University of Nigeria Nsukka (UNN) till 2019 when her research and administrative operations were moved to her permanent site at Eburummiri, Agu-Umuakashi, Nsukka.`,
+    // labs: ['Astronomy Lab', 'Astrophysics Lab'],
     // Telescope / astronomy image
+    imageUri: NASRDA_LOGO_URI,
+  },
+  {
+    code: "ARCSSTEE",
+    name: 'African Regional Centre for Space Science & Technology Education in English',
+    loc: 'Ile-Ife, Osun',
+    accentColor: colors.gold,
+    url: 'https://arcsste.org',
+    desc: 'UN-affiliated regional centre offering postgraduate programmes in space science, remote sensing and GIS.',
+    // labs: ['Remote Sensing Lab', 'GIS & Mapping Lab'],
+    // University / education in space science
     imageUri: NASRDA_LOGO_URI,
   },
   {
@@ -45,8 +58,8 @@ const CENTRES: Centre[] = [
     loc: 'Toro, Bauchi',
     accentColor: colors.gold,
     url: '',
-    desc: 'Earth observation and geo-hazard monitoring using space geodetic and geophysical techniques.',
-    labs: ['Geodynamics Lab', 'Earth Deformation Lab'],
+    desc: 'The Centre for Geodesy and Geodynamics is to carryout earth observation research as well as monitor and predict geo-hazards using space geodetic and geophysical technique for sustainable national development.',
+    // labs: ['Geodynamics Lab', 'Earth Deformation Lab'],
     // Earth from space — geodesy
     imageUri: NASRDA_LOGO_URI,
   },
@@ -56,10 +69,14 @@ const CENTRES: Centre[] = [
     loc: 'Abuja, FCT',
     accentColor: colors.green2,
     url: 'http://www.cstd.nasrda.gov.ng',
-    desc: 'Design, development, testing and integration of satellite systems. Home of all NigeriaSAT programmes.',
-    labs: ['Satellite Integration Lab', 'Electronics Lab', 'Clean Room Facility'],
+    desc: `The Centre for Satellite Technology Development (CSTD) is a key research and development center of the National Space Research and Development Agency (NASRDA), dedicated to advancing satellite technology in Nigeria.  As a pioneer in space science and technology, CSTD is responsible for the design, development, testing, and integration of satellite systems that support national security, environmental monitoring, disaster management, and scientific research.   
+
+Established in 2001 (initially as the “Satellite Technology Project”), CSTD is a key activity center, better known as the “heartbeat” of NASRDA, established in line with Nigeria’s National Space Policy and Programs.   
+
+CSTD has played a critical role in the design, development, and launch of Nigeria’s satellites, such as NigeriaSat-1, NigeriaSat-2, NigeriaSat-X, and NigComSat-1R.  It is currently engaged in the planning of Nano Satellite Mission Constellation Project, an initiative to develop small satellites for IoT applications and other uses.  CSTD provides technical expertise for satellite operation, maintenance, and mission planning.  The center also engages in ground station activities, including satellite tracking, data acquisition, and analysis.  CSTD conducts research in satellite sub-systems such as power systems, control systems, aerodynamic systems, and payload sensors.  The center also works on next-generation satellite technology applications in nano-satellites, and AI-driven satellite data analytics.  `,
+    // labs: ['Satellite Integration Lab', 'Electronics Lab', 'Clean Room Facility'],
     // Satellite in clean room
-    imageUri: 'https://central.nasrda.gov.ng/wp-content/uploads/2025/03/NigeriaSAT_2.webp',
+    imageUri: NASRDA_LOGO_URI,
   },
   {
     code: 'CSTP',
@@ -67,86 +84,98 @@ const CENTRES: Centre[] = [
     loc: 'Epe, Lagos',
     accentColor: colors.gold,
     url: '',
-    desc: "Research in rocket propulsion and space transport to advance Nigeria's indigenous launch capabilities.",
-    labs: ['Propulsion Testing Lab', 'Rocket Systems Lab'],
+    desc: `The Centre for Space Transport and Propulsion (CSTP), Epe, Lagos, was established on the 19th February, 2003, as one of the six activity Centres of National Space Research and Development Agency (NASRDA), Abuja. Nigeria. It is strategically situated along the Lagos lagoon in Epe, and in close proximity with the Lagos State University (LASU), Epe Engineering campus. The Centre is charged with the responsibility of conducting fundamental Research and Development (R&D) in space transport vehicles and propulsion system. This is to enable NASRDA acquire the launch capabilities of various satellites to Low Earth Orbit (LEO). Geosynchronous Equatorial Orbit (GEO), and interplanetary space, by Nigerian scientists and engineers.
+CSTP policy, is aimed at complementing NASRDA policy statement at ensuring that Nigeria vigorously pursues the attainment of Space Capabilities as an essential tool for its socioeconomic development and the enhancement of the quality of life of its people.`,
+    // labs: ['Propulsion Testing Lab', 'Rocket Systems Lab'],
     // Rocket launch
     imageUri: NASRDA_LOGO_URI,
   },
   {
-    code: 'CSSTE',
-    name: 'Centre for Space Science & Technology Education',
-    loc: 'Ile-Ife, Osun',
-    accentColor: colors.sky,
-    url: '',
-    desc: 'UN-affiliated regional centre offering postgraduate programmes in space science, remote sensing and GIS.',
-    labs: ['Remote Sensing Lab', 'GIS & Mapping Lab'],
-    // University / education in space science
+    code: 'AIR',
+    name: 'Atlantic International Research Centre',
+    loc: 'Abuja, FCT',
+    accentColor: colors.green2,
+    url: 'https://aircentre.org',
+    desc: 'International research hub for climate science, oceanography and coastal resilience in the Atlantic region.',
+    // labs: ['Climate Modeling Lab', 'Ocean Observation Lab'],
+    // Ocean / climate research
     imageUri: NASRDA_LOGO_URI,
   },
+  {
+    code: 'ISSE',
+    name: 'Institute of Space Science & Engineering',
+    loc: 'Abuja, FCT',
+    accentColor: colors.sky,
+    url: '',
+    desc: 'Interdisciplinary research in space science, engineering and technology development.',
+    // labs: ['Space Science Lab', 'Engineering Prototyping Lab'],
+    // Space science + engineering
+    imageUri: NASRDA_LOGO_URI,
+  },
+
   {
     code: 'NCRS',
     name: 'National Centre for Remote Sensing',
     loc: 'Jos, Plateau',
     accentColor: colors.green2,
     url: '',
-    desc: 'Acquisition, processing and archiving of satellite data for agriculture, disaster management and environment.',
-    labs: ['Data Acquisition Lab', 'Image Processing Lab', 'Ground Receiving Station'],
-    // Satellite imagery / remote sensing
+    desc: `The desire by Nigeria to establish its own comprehensive Remote Sensing Centre dates back to 1976, when the Government first made its intentions known during an Inter-Governmental meeting held in Addis Ababa.
+
+The National Centre for Remote Sensing (NCRS) specializes in geospatial data acquisition, processing, and application in various fields.
+NCRS is committed to being a Centre of excellence in the provision of Geo-informatic services for sustainable Development.` ,   // labs: ['Data Acquisition Lab', 'Image Processing Lab', 'Ground Receiving Station'],    // Satellite imagery / remote sensing
     imageUri: NASRDA_LOGO_URI,
   },
   {
     code: 'CSID',
-    name: 'Centre for Space Information Development',
+    name: 'Centre for Space Incubation Development',
     loc: 'Abuja, FCT',
     accentColor: colors.gold,
     url: '',
-    desc: "GIS development, spatial databases and IT infrastructure for Nigeria's space data economy.",
-    labs: ['GIS Development Lab', 'Spatial Database Lab'],
+    desc: `The Centre For Space Innovation & Development (CSID), is involved in advancing space-related research and innovation. The center focuses on developing new space technologies, collaborating with international partners, and contributing to Nigeria’s national development goals.`,
+    // labs: ['GIS Development Lab', 'Spatial Database Lab'],
     // GIS / mapping
     imageUri: NASRDA_LOGO_URI,
   },
   {
     code: 'CSESO',
-    name: 'Centre for Space & Earth System Observation',
-    loc: 'Kano, Kano',
+    name: 'Centre for Space Earth Station and Observatory',
+    loc: 'Eruwa, Oyo State',
     accentColor: colors.sky,
     url: '',
-    desc: 'Earth system science, climate observation and environmental monitoring using satellite data.',
-    labs: ['Climate Monitoring Lab', 'Earth Observation Lab'],
+    desc: `The Center for Space Earth Station and Observatory (CSESO), established under NASRDA in 2025, is tasked with operating and maintaining Nigeria’s Earth station hubs and teleports, ensuring seamless communication links for present and future satellites and space missions. Its duties include managing ground receiving stations for data acquisition, supporting satellite control and monitoring, and facilitating astronomical observations for research and exploration. CSESO also coordinates deep space exploration activities, collaborates with international and national partners in the Nigeria space programme, and provides technical infrastructure for satellite communication, navigation, and scientific missions, thereby serving as a critical backbone for Nigeria’s expanding space operations.`,
+    // labs: ['Climate Monitoring Lab', 'Earth Observation Lab'],
     // Climate / earth system
     imageUri: NASRDA_LOGO_URI,
   },
   {
     code: 'CSLS',
-    name: 'Centre for Space Law & Science',
-    loc: 'Abuja, FCT',
+    name: 'Centre for Space Life Science',
+    loc: 'Ibadan, Oyo State',
     accentColor: colors.gold,
     url: '',
-    desc: 'Research and capacity building in space law, policy, and international regulatory frameworks.',
-    labs: ['Policy Research Unit'],
+    desc: `The Centre for Space Life Sciences (CSLS) at the University of Ibadan, Oyo State, Nigeria, is a newly established research and training institution inaugurated on December 2, 2025, in response to the rapid expansion of human space exploration driven by governmental agencies, commercial enterprises and international collaborations, which has created an urgent need for specialized research on the interactions between biological systems and the space environment. As preparations intensify for long-duration missions to the Moon, Mars, and beyond, the Centre focuses on addressing critical challenges related to human health, biological systems and life-support infrastructure in space. The Centre is located within Nigeria’s premier university, CSLS serves as a national hub for interdisciplinary research spanning space biology, biomedical sciences, environmental studies and related technologies, with a strong commitment to advancing scientific knowledge, building capacity and fostering innovation. The Centre aims to position Nigeria as a strategic contributor to global space biology and human spaceflight research while translating space-based discoveries into practical solutions that enhance healthcare, agriculture and environmental resilience on Earth.`,    // labs: ['Policy Research Unit'],
     // Space law / treaty — UN image
     imageUri: NASRDA_LOGO_URI,
   },
   {
     code: 'CCCF',
-    name: 'Command & Control Centre Facility',
-    loc: 'Abuja, FCT',
+    name: 'Centre for Space-Based Climate Change and Food Security',
+    loc: 'Mubi, Adamawa',
     accentColor: colors.green2,
     url: '',
-    desc: 'SERA Mission Control — satellite command, telemetry, tracking and control for all Nigerian satellites.',
-    labs: ['SERA Mission Control Room', 'Telemetry Lab', 'Ground Station'],
+    desc: "The Centre for Space-Based Climate and Food Security (CCCF) is in Mubi, Adamawa State",
+    // labs: ['SERA Mission Control Room', 'Telemetry Lab', 'Ground Station'],
     // Mission control room
     imageUri: NASRDA_LOGO_URI,
   },
   {
     code: 'CTR',
-    name: 'Centre for Technology Research',
-    loc: 'Abuja, FCT',
+    name: 'Centre for Tropical Research',
+    loc: 'Ikot Ekpene, Akwa Ibom',
     accentColor: colors.sky,
     url: '',
-    desc: 'Applied R&D in emerging space technologies, materials science and advanced manufacturing.',
-    labs: ['Materials Lab', 'Advanced Manufacturing Lab'],
-    // Lab / technology research
+    desc: "The Centre for Tropical Research (CTR) is in Ikot Ekpene, Akwa Ibom State",
+    // labs: ['Materials Lab', 'Advanced Manufacturing Lab'],
     imageUri: NASRDA_LOGO_URI,
   },
 ];
@@ -182,23 +211,23 @@ const CentreCard: React.FC<{ c: Centre }> = ({ c }) => (
       </View>
 
       {/* Description */}
-      <Text style={st.cardDesc}>{c.desc}</Text>
+      <Text style={st.cardDesc}>{c.desc.substring(0, 200)}{c.desc.length > 200 ? "..." : ''}</Text>
 
       {/* Lab pills */}
-      <View style={st.labsRow}>
+      {/* <View style={st.labsRow}>
         {c.labs.map((l, i) => (
           <View key={i} style={st.labPill}>
             <Text style={st.labPillTxt}>{l}</Text>
           </View>
         ))}
-      </View>
+      </View> */}
 
       {/* Footer */}
       <View style={st.cardFooter}>
-        <View style={st.labCountRow}>
+        {/* <View style={st.labCountRow}>
           <Ionicons name="flask-outline" size={11} color={colors.textThird} />
           <Text style={st.labCount}>{c.labs.length} LAB{c.labs.length !== 1 ? 'S' : ''}</Text>
-        </View>
+        </View> */}
         {c.url ? (
           <TouchableOpacity
             style={st.visitBtn}
@@ -227,8 +256,8 @@ export const CentresScreen: React.FC = () => {
         {/* Stats */}
         <View style={st.statsRow}>
           {([
-            { n: '12', l: 'Centres', color: colors.green2 },
-            { n: '30+', l: 'Laboratories', color: colors.gold },
+            { n: CENTRES.length, l: 'Centres', color: colors.green2 },
+            { n: '14', l: 'Laboratories', color: colors.gold },
             { n: '6', l: 'Geo. Zones', color: colors.sky },
           ] as const).map(({ n, l, color }, i) => (
             <View key={i} style={st.statBox}>

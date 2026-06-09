@@ -41,6 +41,11 @@ const TABS: TabDef[] = [
     label: 'Staff',
     icon: (f) => <Ionicons name={f ? 'lock-closed' : 'lock-closed-outline'} size={21} color={f ? colors.green2 : colors.textThird} />,
   },
+  {
+    name: 'nai',
+    label: 'Nasrda AI',
+    icon: (f) => <Ionicons name={f ? 'hardware-chip' : 'hardware-chip-outline'} size={21} color={f ? colors.green2 : colors.textThird} />,
+  },
 ];
 
 /* ── Custom tab bar ──────────────────────────────────────────── */
@@ -88,6 +93,7 @@ export default function TabLayout() {
       <Tabs.Screen name="centres"  options={{ title: 'Centres' }} />
       <Tabs.Screen name="news"     options={{ title: 'News' }} />
       <Tabs.Screen name="staff"    options={{ title: 'Staff' }} />
+      <Tabs.Screen name="nai"      options={{ title: 'AI' }} />
     </Tabs>
   );
 }
@@ -103,10 +109,10 @@ const st = StyleSheet.create({
     }),
   },
   topAccent: {
-    position: 'absolute',
-    top: 0, left: 0, right: 0,
-    height: 1,
-    backgroundColor: 'rgba(0,192,96,0.3)',
+    // position: 'absolute',
+    // top: 0, left: 0, right: 0,
+    // height: 1,
+    // backgroundColor: 'rgba(0,192,96,0.3)',
   },
   tabItem: {
     flex: 1,
