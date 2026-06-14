@@ -43,7 +43,7 @@ const TABS: TabDef[] = [
   },
   {
     name: 'nai',
-    label: 'Nasrda AI',
+    label: 'NASRDA AI',
     icon: (f) => <Ionicons name={f ? 'hardware-chip' : 'hardware-chip-outline'} size={21} color={f ? colors.green2 : colors.textThird} />,
   },
 ];

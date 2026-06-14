@@ -1,104 +1,147 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View, Text, Image, ScrollView, TouchableOpacity,
-  StyleSheet, RefreshControl,
+  StyleSheet, RefreshControl, ActivityIndicator,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { NavLogo } from '../components/NavLogo';
 import { colors } from '../theme';
+import { useGetPostsQuery } from '@/redux/services/wpApi';
+import { router } from 'expo-router';
 
-/* ── Real NASRDA image URLs sourced from central.nasrda.gov.ng ── */
-const NASRDA_IMAGES = {
-  /** NASRDA + UNDRR/ECHO-ECOWAS partnership meeting, May 2026 */
-  undrr:  'https://central.nasrda.gov.ng/wp-content/uploads/2026/05/NASRDA-UNDRR-ECHO-ECOWAS-1-768x546.jpeg',
-  /** NASRDA SME / Access Bank commercialisation event, May 2026 */
-  sme:    'https://central.nasrda.gov.ng/wp-content/uploads/2026/05/NASRDA-SME-Access-Bank-768x549.jpeg',
-  /** NASRDA Headquarters gate, Lugbe Abuja */
-  hq:     'https://central.nasrda.gov.ng/wp-content/uploads/2025/04/NASRDA_Gate1.jpg',
-  /** DG Dr Matthew Adepoju 3-point agenda briefing */
-  dg:     'https://central.nasrda.gov.ng/wp-content/uploads/2025/04/DG-3-point-Agenda-1.jpg',
-  /** UNDRR event - group session */
-  undrr2: 'https://central.nasrda.gov.ng/wp-content/uploads/2026/05/NASRDA-UNDRR-ECHO-ECOWAS-2-1024x731.jpeg',
-  /** UNDRR event - presentation */
-  undrr3: 'https://central.nasrda.gov.ng/wp-content/uploads/2026/05/NASRDA-UNDRR-ECHO-ECOWAS-3-1024x731.jpeg',
+// Type definitions for WordPress post data
+type WPMedia = {
+  source_url: string;
+  media_details?: {
+    sizes?: {
+      medium?: { source_url: string };
+      large?: { source_url: string };
+      thumbnail?: { source_url: string };
+    };
+  };
 };
 
-type NewsItem = {
-  tag: string;
-  title: string;
+type WPPost = {
+  id: number;
+  title: { rendered: string };
+  excerpt: { rendered: string };
+  content: { rendered: string };
   date: string;
-  mins: number;
-  imageUri: string;
-  tagColor: string;
+  slug: string;
+  link: string;
+  featured_media: number;
+  _embedded?: {
+    'wp:featuredmedia'?: WPMedia[];
+    author?: Array<{ name: string }>;
+    'wp:term'?: Array<Array<{ name: string; taxonomy: string }>>;
+  };
+  categories?: number[];
+  tags?: number[];
 };
 
-const NEWS: NewsItem[] = [
-  {
-    tag: 'PARTNERSHIP',
-    title: "NASRDA, UNDRR & ECHO-ECOWAS Strengthen Partnership on Disaster Response",
-    date: 'May 2026', mins: 4,
-    imageUri: NASRDA_IMAGES.undrr,
-    tagColor: colors.green2,
-  },
-  {
-    tag: 'COMMERCIALISATION',
-    title: 'NASRDA Moves to Commercialise Research Innovations with Access Bank',
-    date: 'May 2026', mins: 3,
-    imageUri: NASRDA_IMAGES.sme,
-    tagColor: colors.sky,
-  },
-  {
-    tag: 'EMPOWERMENT',
-    title: 'NASRDA Leads the Drive for Youth Empowerment in Space Technology',
-    date: 'May 2025', mins: 4,
-    imageUri: NASRDA_IMAGES.dg,
-    tagColor: colors.sky,
-  },
-  {
-    tag: 'INNOVATION',
-    title: 'Nigeria Deepens Footprint in Global Space Innovation',
-    date: 'Apr 2025', mins: 3,
-    imageUri: NASRDA_IMAGES.hq,
-    tagColor: colors.gold,
-  },
-  {
-    tag: 'POLICY',
-    title: "Minister Nnaji Calls for Decisive Move to Reshape Africa's Space Economy",
-    date: 'Mar 2025', mins: 5,
-    imageUri: NASRDA_IMAGES.undrr2,
-    tagColor: colors.green2,
-  },
-  {
-    tag: 'OPERATIONS',
-    title: 'SERA Mission Control Confirms NigeriaSAT-2 Tasking Window',
-    date: 'Jan 2025', mins: 2,
-    imageUri: NASRDA_IMAGES.undrr3,
-    tagColor: colors.gold,
-  },
-];
+// Helper: Get best image URL from WordPress media
+const getImageUrl = (post: WPPost): string => {
+  const media = post._embedded?.['wp:featuredmedia']?.[0];
+  if (!media) {
+    // Fallback image
+    return 'https://central.nasrda.gov.ng/wp-content/uploads/2025/04/NASRDA_Gate1.jpg';
+  }
+  
+  // Try to get a medium/large size first
+  const sizes = media.media_details?.sizes;
+  if (sizes?.large?.source_url) return sizes.large.source_url;
+  if (sizes?.medium?.source_url) return sizes.medium.source_url;
+  if (sizes?.thumbnail?.source_url) return sizes.thumbnail.source_url;
+  
+  return media.source_url;
+};
 
-const TABS = ['All', 'Press Releases', 'Events', 'Gallery', 'Videos'];
+// Helper: Format date to "Month Year" format
+const formatDate = (dateString: string): string => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+};
+
+// Helper: Strip HTML tags from excerpt/content
+const stripHtml = (html: string): string => {
+  return html.replace(/<[^>]*>/g, '').trim();
+};
+
+// Helper: Calculate read time (rough estimate: 200 words per minute)
+const getReadTime = (content: string): number => {
+  const text = stripHtml(content);
+  const wordCount = text.split(/\s+/).length;
+  return Math.max(1, Math.ceil(wordCount / 200));
+};
+
+// Helper: Get primary category
+const getPrimaryCategory = (post: WPPost): string => {
+  const terms = post._embedded?.['wp:term']?.[0];
+  if (terms && terms.length > 0) {
+    return terms[0].name.toUpperCase();
+  }
+  return 'NASRDA NEWS';
+};
 
 export const NewsScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const [activeTab, setActiveTab] = useState('All');
   const [refreshing, setRefreshing] = useState(false);
 
-  const onRefresh = () => {
-    setRefreshing(true);
-    setTimeout(() => setRefreshing(false), 1200);
-  };
+  const { data: posts, isLoading, isError, refetch } = useGetPostsQuery();
 
-  const featured = NEWS[0];
-  const rest     = NEWS.slice(1);
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  }, [refetch]);
+
+  // Filter posts by tab (you can adjust this based on your category/tag logic)
+  const filteredPosts = React.useMemo(() => {
+    if (!posts || !Array.isArray(posts)) return [];
+    
+    if (activeTab === 'All') return posts;
+    
+    // Example: Filter by category name (adjust based on your actual category IDs)
+    // For now, return all posts since we don't have category filtering logic
+    return posts;
+  }, [posts, activeTab]);
+
+  const featuredPost = filteredPosts[0];
+  const restPosts = filteredPosts.slice(1);
+
+  // Loading state
+  if (isLoading && !refreshing) {
+    return (
+      <View style={[st.root, { paddingTop: insets.top }, st.centerContainer]}>
+        <NavLogo />
+        <ActivityIndicator size="large" color={colors.green2} style={{ marginTop: 40 }} />
+        <Text style={st.loadingText}>Loading news from NASRDA...</Text>
+      </View>
+    );
+  }
+
+  // Error state
+  if (isError) {
+    return (
+      <View style={[st.root, { paddingTop: insets.top }, st.centerContainer]}>
+        <NavLogo />
+        <Ionicons name="cloud-offline-outline" size={64} color={colors.textThird} />
+        <Text style={st.errorText}>Unable to load news</Text>
+        <TouchableOpacity style={st.retryBtn} onPress={() => refetch()}>
+          <Text style={st.retryBtnText}>Retry</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   return (
     <View style={[st.root, { paddingTop: insets.top }]}>
       {/* Nav */}
       <View style={st.nav}>
         <NavLogo />
-        <Text style={st.navTitle}>Featured News</Text>
+        <Text style={st.navTitle}>NASRDA News</Text>
         <TouchableOpacity style={st.refreshBtn} onPress={onRefresh}>
           <Ionicons name="refresh-outline" size={20} color={colors.textThird} />
         </TouchableOpacity>
@@ -107,26 +150,9 @@ export const NewsScreen: React.FC = () => {
       {/* Live banner */}
       <View style={st.syncBar}>
         <View style={st.syncDot} />
-        <Text style={st.syncTxt}>LIVE — CENTRAL.NASRDA.GOV.NG/NEWS-MEDIA</Text>
+        <Text style={st.syncTxt}>LIVE — CENTRAL.NASRDA.GOV.NG</Text>
       </View>
 
-      {/* Filter chips */}
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={st.chipRow}
-        contentContainerStyle={st.chipContent}
-      >
-        {TABS.map(t => (
-          <TouchableOpacity
-            key={t}
-            style={[st.chip, activeTab === t && st.chipActive]}
-            onPress={() => setActiveTab(t)}
-          >
-            <Text style={[st.chipTxt, activeTab === t && st.chipTxtActive]}>{t}</Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -134,62 +160,85 @@ export const NewsScreen: React.FC = () => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.green2} />
         }
       >
-        {/* Featured card — full-bleed real NASRDA photo */}
-        <View style={st.featWrap}>
-          <TouchableOpacity style={st.featCard} activeOpacity={0.88}>
-            {/* Real photo */}
-            <Image
-              source={{ uri: featured.imageUri }}
-              style={st.featBgImage}
-              resizeMode="cover"
-            />
-            {/* Gradient-like scrim */}
-            <View style={st.featOverlay} />
-            <View style={st.featContent}>
-              <View style={[st.tag, { backgroundColor: colors.green }]}>
-                <Text style={st.tagTxt}>{featured.tag}</Text>
-              </View>
-              <Text style={st.featTitle}>{featured.title}</Text>
-              <View style={st.featMeta}>
-                <Ionicons name="time-outline" size={11} color="rgba(232,240,248,0.7)" />
-                <Text style={st.featMetaTxt}>{featured.date} · {featured.mins} min read</Text>
-              </View>
+        {filteredPosts.length === 0 ? (
+          <View style={st.emptyContainer}>
+            <Text style={st.emptyText}>No news articles found</Text>
+          </View>
+        ) : (
+          <>
+            {/* Featured card - first post */}
+            <View style={st.featWrap}>
+              <TouchableOpacity 
+                style={st.featCard} 
+                activeOpacity={0.88}
+                onPress={() => router.push(`/news/${featuredPost.id}`)}
+              >
+                <Image
+                  source={{ uri: getImageUrl(featuredPost) }}
+                  style={st.featBgImage}
+                  resizeMode="cover"
+                />
+                <View style={st.featOverlay} />
+                <View style={st.featContent}>
+                  <View style={[st.tag, { backgroundColor: colors.green }]}>
+                    <Text style={st.tagTxt}>{getPrimaryCategory(featuredPost)}</Text>
+                  </View>
+                  <Text style={st.featTitle} numberOfLines={3}>
+                    {stripHtml(featuredPost.title.rendered)}
+                  </Text>
+                  <View style={st.featMeta}>
+                    <Ionicons name="time-outline" size={11} color="rgba(232,240,248,0.7)" />
+                    <Text style={st.featMetaTxt}>
+                      {formatDate(featuredPost.date)} · {getReadTime(featuredPost.content.rendered)} min read
+                    </Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
             </View>
-          </TouchableOpacity>
-        </View>
 
-        {/* Divider */}
-        <View style={st.sectionHdr}>
-          <Text style={st.sectionLabel}>RECENT STORIES</Text>
-          <View style={st.sectionLine} />
-        </View>
-
-        {/* News list — each with a real NASRDA thumbnail */}
-        {rest.map((n, i) => (
-          <TouchableOpacity key={i} style={st.newsCard} activeOpacity={0.8}>
-            {/* Real photo thumbnail */}
-            <View style={st.newsThumb}>
-              <Image
-                source={{ uri: n.imageUri }}
-                style={st.newsThumbImg}
-                resizeMode="cover"
-              />
-              <View style={st.newsThumbOverlay} />
+            {/* Divider */}
+            <View style={st.sectionHdr}>
+              <Text style={st.sectionLabel}>RECENT STORIES</Text>
+              <View style={st.sectionLine} />
             </View>
-            <View style={st.newsBody}>
-              <View style={[st.inlineTag, { backgroundColor: `${n.tagColor}18` }]}>
-                <Text style={[st.inlineTagTxt, { color: n.tagColor }]}>{n.tag}</Text>
-              </View>
-              <Text style={st.newsTitle} numberOfLines={2}>{n.title}</Text>
-              <View style={st.newsMeta}>
-                <Ionicons name="time-outline" size={10} color={colors.textThird} />
-                <Text style={st.newsDate}>{n.date} · {n.mins} min read</Text>
-              </View>
-            </View>
-            <Ionicons name="chevron-forward" size={14} color={colors.textThird} />
-          </TouchableOpacity>
-        ))}
 
+            {/* News list */}
+            {restPosts.map((post: WPPost) => (
+              <TouchableOpacity 
+                key={post.id} 
+                style={st.newsCard} 
+                activeOpacity={0.8}
+                onPress={() => router.push(`/news/${post.id}`)}
+              >
+                <View style={st.newsThumb}>
+                  <Image
+                    source={{ uri: getImageUrl(post) }}
+                    style={st.newsThumbImg}
+                    resizeMode="cover"
+                  />
+                  <View style={st.newsThumbOverlay} />
+                </View>
+                <View style={st.newsBody}>
+                  <View style={[st.inlineTag, { backgroundColor: `${colors.sky}18` }]}>
+                    <Text style={[st.inlineTagTxt, { color: colors.sky }]}>
+                      {getPrimaryCategory(post)}
+                    </Text>
+                  </View>
+                  <Text style={st.newsTitle} numberOfLines={2}>
+                    {stripHtml(post.title.rendered)}
+                  </Text>
+                  <View style={st.newsMeta}>
+                    <Ionicons name="time-outline" size={10} color={colors.textThird} />
+                    <Text style={st.newsDate}>
+                      {formatDate(post.date)} · {getReadTime(post.content.rendered)} min read
+                    </Text>
+                  </View>
+                </View>
+                <Ionicons name="chevron-forward" size={14} color={colors.textThird} />
+              </TouchableOpacity>
+            ))}
+          </>
+        )}
         <View style={{ height: 24 }} />
       </ScrollView>
     </View>
@@ -216,6 +265,42 @@ const st = StyleSheet.create({
     width: 36, height: 36, borderRadius: 10,
     alignItems: 'center', justifyContent: 'center',
     backgroundColor: 'rgba(255,255,255,0.05)',
+  },
+
+  /* Loading/Empty states */
+  centerContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 16,
+  },
+  loadingText: {
+    color: colors.textThird,
+    fontSize: 14,
+    marginTop: 16,
+  },
+  errorText: {
+    color: colors.textThird,
+    fontSize: 16,
+    marginTop: 16,
+  },
+  retryBtn: {
+    backgroundColor: colors.green2,
+    paddingHorizontal: 24,
+    paddingVertical: 10,
+    borderRadius: 8,
+    marginTop: 16,
+  },
+  retryBtnText: {
+    color: '#fff',
+    fontWeight: '600',
+  },
+  emptyContainer: {
+    padding: 40,
+    alignItems: 'center',
+  },
+  emptyText: {
+    color: colors.textThird,
+    fontSize: 14,
   },
 
   /* Live banner */
@@ -247,10 +332,10 @@ const st = StyleSheet.create({
   chipTxt:       { fontSize: 12, fontWeight: '600', height:25, color: colors.textThird },
   chipTxtActive: { color: colors.green2 },
 
-  /* Featured card — full photo */
+  /* Featured card */
   featWrap: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 8 },
   featCard: {
-    borderRadius: 18, overflow: 'hidden', height: 220,
+    borderRadius: 18, overflow: 'hidden', height: 240,
     borderWidth: 1, borderColor: colors.borderGreen,
   },
   featBgImage: {
@@ -297,7 +382,7 @@ const st = StyleSheet.create({
     borderBottomWidth: 1, borderBottomColor: 'rgba(79,195,247,0.06)',
   },
   newsThumb: {
-    width: 72, height: 56, borderRadius: 12,
+    width: 80, height: 64, borderRadius: 12,
     overflow: 'hidden',
     borderWidth: 1, borderColor: 'rgba(79,195,247,0.12)',
     backgroundColor: colors.navy2,
@@ -317,7 +402,7 @@ const st = StyleSheet.create({
   },
   inlineTagTxt: { fontSize: 9, fontWeight: '800', letterSpacing: 1 },
   newsTitle: {
-    fontSize: 13, fontWeight: '600', color: colors.textPrimary, lineHeight: 19,
+    fontSize: 14, fontWeight: '600', color: colors.textPrimary, lineHeight: 19,
   },
   newsMeta: {
     flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 4,

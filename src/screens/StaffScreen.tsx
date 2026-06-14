@@ -145,28 +145,30 @@ const ChatScreen: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
 
 const DashboardScreen: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
   return (
-  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: -40 }}>
-    <Text style={{ fontSize: 18, color: colors.textPrimary }}>Welcome to the NASRDA Staff Portal</Text>
-    <Text style={{ fontSize: 14, color: colors.textSecond, marginTop: 8 }}>
-      Access internal communications, mission data, and more.
-    </Text>
- <TouchableOpacity onPress={onLogout} style={st.logoutBtn}>
-          <Ionicons name="log-out-outline" size={20} color={colors.textThird} />
-        </TouchableOpacity>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: -40 }}>
+      <Text style={{ fontSize: 18, color: colors.textPrimary }}>Welcome to the NASRDA Staff Portal</Text>
+      <Text style={{ fontSize: 14, color: colors.textSecond, marginTop: 8 }}>
+        Access internal communications, mission data, and more.
+      </Text>
+      
 
-    {/* Buttton For Account Settings, Staff Email, Chat  */}
-    <View style={{ marginTop: 60, gap: 12 }}>
-      <View style={st.actionSettingsBtn}>
-        <Text style={st.actionSettingsTxt} onPress={() => alert('Account settings coming soon!')} >Account Settings</Text>
+      {/* Buttton For Account Settings, Staff Email, Chat  */}
+      <View style={{ marginTop: 60, gap: 12 }}>
+        <View style={st.actionSettingsBtn}>
+          <Text style={st.actionSettingsTxt} onPress={() => alert('Account settings coming soon!')} >Account Settings</Text>
+        </View>
+        <View style={st.staffEmailBtn}>
+          <Text style={st.staffEmailTxt} onPress={() => alert('Chat feature coming soon!')}>Staff Email</Text>
+        </View>
+        <View style={st.staffChatBtn}>
+          <Text style={st.staffChatTxt} onPress={() => alert('Chat feature coming soon!')}>Staff Chat</Text>
+        </View>
       </View>
-      <View style={st.staffEmailBtn}>
-        <Text style={st.staffEmailTxt} onPress={() => alert('Chat feature coming soon!')}>Staff Email</Text>
-      </View>
-      <View style={st.staffChatBtn}>
-        <Text style={st.staffChatTxt} onPress={() => alert('Chat feature coming soon!')}>Staff Chat</Text>
-      </View>
+
+      <TouchableOpacity onPress={onLogout} style={st.logoutBtn}>
+        <Ionicons name="log-out-outline" size={20} color={colors.textThird} />
+      </TouchableOpacity>
     </View>
-  </View>
   );
 };
 
@@ -261,20 +263,20 @@ const st = StyleSheet.create({
   secNoteTxt: { fontSize: 11, color: colors.textThird },
 
   // dashboard action buttons
-  actionSettingsBtn: { backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 10, padding: 12,  borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)' },
+  actionSettingsBtn: { backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 10, padding: 12, borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)' },
   actionSettingsTxt: { fontSize: 13, fontWeight: 900, color: colors.textPrimary, paddingHorizontal: 10, textAlign: 'center' },
 
   // staff Email Button
   staffEmailBtn: {
     backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 10,
-     borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)',
+    borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)',
     paddingVertical: 12, paddingHorizontal: 20,
   },
   staffEmailTxt: { fontSize: 13, fontWeight: 900, color: colors.textPrimary, textAlign: 'center' },
 
   staffChatBtn: {
     backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 10,
-     borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)',
+    borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)',
     paddingVertical: 12, paddingHorizontal: 20,
   },
   staffChatTxt: { fontSize: 13, fontWeight: 900, color: colors.textPrimary, textAlign: 'center' },
@@ -292,6 +294,7 @@ const st = StyleSheet.create({
   onlineDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: colors.green2 },
   onlineTxt: { fontSize: 11, color: colors.green2, fontWeight: '600' },
   logoutBtn: {
+    position: 'absolute', top: 52, right: 20,
     width: 36, height: 36, borderRadius: 10,
     alignItems: 'center', justifyContent: 'center',
     backgroundColor: 'rgba(255,255,255,0.05)',

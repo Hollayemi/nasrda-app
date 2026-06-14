@@ -1,31 +1,102 @@
 import React, { useEffect, useRef } from 'react';
 import {
   View, Text, Image, ScrollView, TouchableOpacity,
-  Animated, StyleSheet, StatusBar, Dimensions,
+  Animated, StyleSheet, StatusBar, Dimensions, ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { colors } from '../theme';
 import { NASRDA_LOGO_URI } from '../components/NavLogo';
+import { useGetPostsQuery } from '@/redux/services/wpApi';
 
 const { width } = Dimensions.get('window');
 const LOGO = { uri: NASRDA_LOGO_URI };
 
-/* ── Real NASRDA image URLs sourced from central.nasrda.gov.ng ── */
-const NASRDA_IMAGES = {
-  /** NASRDA + UNDRR/ECHO-ECOWAS partnership meeting, May 2026 */
-  undrr: 'https://central.nasrda.gov.ng/wp-content/uploads/2026/05/NASRDA-UNDRR-ECHO-ECOWAS-1-768x546.jpeg',
-  /** NASRDA SME / Access Bank commercialisation event, May 2026 */
-  sme: 'https://central.nasrda.gov.ng/wp-content/uploads/2026/05/NASRDA-SME-Access-Bank-768x549.jpeg',
-  /** NASRDA Headquarters gate, Lugbe Abuja */
-  hq: 'https://central.nasrda.gov.ng/wp-content/uploads/2025/04/NASRDA_Gate1.jpg',
-  /** DG Dr Matthew Adepoju 3-point agenda briefing */
-  dg: 'https://central.nasrda.gov.ng/wp-content/uploads/2025/04/DG-3-point-Agenda-1.jpg',
-  /** UNDRR event - group session */
-  undrr2: 'https://central.nasrda.gov.ng/wp-content/uploads/2026/05/NASRDA-UNDRR-ECHO-ECOWAS-2-1024x731.jpeg',
-  /** UNDRR event - presentation */
-  undrr3: 'https://central.nasrda.gov.ng/wp-content/uploads/2026/05/NASRDA-UNDRR-ECHO-ECOWAS-3-1024x731.jpeg',
+// Type definitions for WordPress post data
+type WPMedia = {
+  source_url: string;
+  media_details?: {
+    sizes?: {
+      medium?: { source_url: string };
+      large?: { source_url: string };
+      thumbnail?: { source_url: string };
+    };
+  };
+};
+
+type WPPost = {
+  id: number;
+  title: { rendered: string };
+  excerpt: { rendered: string };
+  content: { rendered: string };
+  date: string;
+  slug: string;
+  link: string;
+  featured_media: number;
+  _embedded?: {
+    'wp:featuredmedia'?: WPMedia[];
+    author?: Array<{ name: string }>;
+    'wp:term'?: Array<Array<{ name: string; taxonomy: string }>>;
+  };
+  categories?: number[];
+  tags?: number[];
+};
+
+// Helper: Get best image URL from WordPress media
+const getImageUrl = (post: WPPost): string => {
+  const media = post._embedded?.['wp:featuredmedia']?.[0];
+  if (!media) {
+    // Fallback to default NASRDA image
+    return 'https://central.nasrda.gov.ng/wp-content/uploads/2025/04/NASRDA_Gate1.jpg';
+  }
+  
+  // Try to get a medium/large size first
+  const sizes = media.media_details?.sizes;
+  if (sizes?.large?.source_url) return sizes.large.source_url;
+  if (sizes?.medium?.source_url) return sizes.medium.source_url;
+  if (sizes?.thumbnail?.source_url) return sizes.thumbnail.source_url;
+  
+  return media.source_url;
+};
+
+// Helper: Strip HTML tags
+const stripHtml = (html: string): string => {
+  return html.replace(/<[^>]*>/g, '').trim();
+};
+
+// Helper: Format date to "Month Year" format
+const formatDate = (dateString: string): string => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffTime = Math.abs(now.getTime() - date.getTime());
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  if (diffDays === 1) return 'Yesterday';
+  if (diffDays < 7) return `${diffDays} days ago`;
+  if (diffDays < 30) return `${Math.floor(diffDays / 7)} week${Math.floor(diffDays / 7) !== 1 ? 's' : ''} ago`;
+  
+  return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+};
+
+// Helper: Get primary category
+const getPrimaryCategory = (post: WPPost): string => {
+  const terms = post._embedded?.['wp:term']?.[0];
+  if (terms && terms.length > 0) {
+    return terms[0].name.toUpperCase();
+  }
+  return 'NASRDA NEWS';
+};
+
+// Helper: Get tag color based on category
+const getTagColor = (category: string): string => {
+  const cat = category.toLowerCase();
+  if (cat.includes('partnership') || cat.includes('collaboration')) return colors.green2;
+  if (cat.includes('innovation') || cat.includes('technology')) return colors.sky;
+  if (cat.includes('event') || cat.includes('launch')) return colors.gold;
+  if (cat.includes('policy') || cat.includes('council')) return colors.green;
+  return colors.sky;
 };
 
 const OrbitRing: React.FC<{
@@ -149,55 +220,31 @@ const Stars: React.FC = () => {
   );
 };
 
-/* ── News row type ───────────────────────────────────────────── */
-type NewsItem = {
-  tag: string;
-  title: string;
-  date: string;
-  route: '/(tabs)/news' | '/(tabs)/centres';
-  imageUri: string;
-  tagColor: string;
-};
-
 /* ─── HomeScreen ────────────────────────────────────────────── */
 export const HomeScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const router = useRouter();
 
-  const news: NewsItem[] = [
-    {
-      tag: 'EMPOWERMENT',
-      title: 'NASRDA Leads the Drive for Youth Empowerment in Space Technology',
-      date: 'May 2025',
-      route: '/(tabs)/news',
-      imageUri: NASRDA_IMAGES.dg,
-      tagColor: colors.sky,
-    },
-    {
-      tag: 'INNOVATION',
-      title: 'Nigeria Deepens Footprint in Global Space Innovation',
-      date: 'Apr 2025',
-      route: '/(tabs)/news',
-      imageUri: NASRDA_IMAGES.hq,
-      tagColor: colors.gold,
-    },
-    {
-      tag: 'CENTRES & LABS',
-      title: '12 Activity Centres Across Nigeria',
-      date: 'Explore →',
-      route: '/(tabs)/centres',
-      imageUri: NASRDA_IMAGES.undrr3,
-      tagColor: colors.green2,
-    },
-  ];
+  const { data: posts, isLoading, isError, refetch } = useGetPostsQuery();
+  
+  // Get only the 6 most recent posts
+  const recentPosts = posts && Array.isArray(posts) ? posts.slice(0, 6) : [];
+  const featuredPost = recentPosts[0];
+  const latestPosts = recentPosts.slice(1);
+
+  const handleNewsPress = (postId: number) => {
+    router.push(`/news/${postId}`);
+  };
 
   return (
     <View style={[st.root, { paddingTop: insets.top }]}>
       <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
       <ScrollView
         style={st.feed}
-        // contentContainerStyle={}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={refetch} tintColor={colors.green2} />
+        }
       >
         {/* ── Hero ── */}
         <View style={st.hero}>
@@ -228,11 +275,6 @@ export const HomeScreen: React.FC = () => {
           {/* Agency name */}
           <View style={st.heroText}>
             <Text style={st.agencyName}>NATIONAL SPACE RESEARCH{'\n'}& DEVELOPMENT AGENCY</Text>
-            <Text style={st.agencySub}>NIGERIA · EST. 1999</Text>
-            <View style={st.liveBadge}>
-              <BlinkDot />
-              <Text style={st.liveText}>NigeriaSAT-2 IN ORBIT</Text>
-            </View>
           </View>
         </View>
 
@@ -240,7 +282,7 @@ export const HomeScreen: React.FC = () => {
         <View style={st.feedContent}>
           {/* Section header */}
           <View style={st.sectionHdr}>
-            <Text style={st.sectionTitle}>Featured News</Text>
+            <Text style={st.sectionTitle}>Latest News</Text>
             <TouchableOpacity
               style={st.seeAllBtn}
               onPress={() => router.push('/(tabs)/news')}
@@ -250,65 +292,90 @@ export const HomeScreen: React.FC = () => {
             </TouchableOpacity>
           </View>
 
-          {/* Featured card — real NASRDA image */}
-          <TouchableOpacity
-            style={st.featCard}
-            onPress={() => router.push('/(tabs)/news')}
-            activeOpacity={0.85}
-          >
-            {/* Real photo from NASRDA website */}
-            <Image
-              source={{ uri: NASRDA_IMAGES.undrr }}
-              style={st.featBgImage}
-              resizeMode="cover"
-            />
-            {/* Dark scrim so text remains legible */}
-            <View style={st.featScrim} />
-            {/* Content */}
-            <View style={st.featContent}>
-              <View style={st.tag}>
-                <Text style={st.tagTxt}>PARTNERSHIP</Text>
-              </View>
-              <Text style={st.featTitle} numberOfLines={2}>
-                NASRDA & DSA Strengthen Nigeria's Space Ecosystem
-              </Text>
-              <View style={st.featMetaRow}>
-                <Ionicons name="time-outline" size={11} color="rgba(232,240,248,0.7)" />
-                <Text style={st.featMeta}>June 2025 · 3 min read</Text>
-                <Ionicons name="chevron-forward" size={14} color={colors.green2} style={{ marginLeft: 'auto' }} />
-              </View>
+          {isLoading ? (
+            <View style={st.loadingContainer}>
+              <ActivityIndicator size="large" color={colors.green2} />
+              <Text style={st.loadingText}>Loading latest news...</Text>
             </View>
-          </TouchableOpacity>
+          ) : isError ? (
+            <View style={st.errorContainer}>
+              <Ionicons name="cloud-offline-outline" size={48} color={colors.textThird} />
+              <Text style={st.errorText}>Unable to load news</Text>
+              <TouchableOpacity style={st.retryBtn} onPress={() => refetch()}>
+                <Text style={st.retryBtnText}>Retry</Text>
+              </TouchableOpacity>
+            </View>
+          ) : recentPosts.length === 0 ? (
+            <View style={st.emptyContainer}>
+              <Text style={st.emptyText}>No news articles available</Text>
+            </View>
+          ) : (
+            <>
+              {/* Featured card - most recent post */}
+              {featuredPost && (
+                <TouchableOpacity
+                  style={st.featCard}
+                  onPress={() => handleNewsPress(featuredPost.id)}
+                  activeOpacity={0.85}
+                >
+                  <Image
+                    source={{ uri: getImageUrl(featuredPost) }}
+                    style={st.featBgImage}
+                    resizeMode="cover"
+                  />
+                  <View style={st.featScrim} />
+                  <View style={st.featContent}>
+                    <View style={[st.tag, { backgroundColor: colors.green }]}>
+                      <Text style={st.tagTxt}>{getPrimaryCategory(featuredPost)}</Text>
+                    </View>
+                    <Text style={st.featTitle} numberOfLines={2}>
+                      {stripHtml(featuredPost.title.rendered)}
+                    </Text>
+                    <View style={st.featMetaRow}>
+                      <Ionicons name="time-outline" size={11} color="rgba(232,240,248,0.7)" />
+                      <Text style={st.featMeta}>{formatDate(featuredPost.date)}</Text>
+                      <Ionicons name="chevron-forward" size={14} color={colors.green2} style={{ marginLeft: 'auto' }} />
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              )}
 
-          {/* Divider label */}
-          <Text style={st.dividerLabel}>LATEST UPDATES</Text>
+              {/* Divider label */}
+              <Text style={st.dividerLabel}>RECENT UPDATES</Text>
 
-          {/* News rows — each with a real NASRDA thumbnail */}
-          {news.map((n, i) => (
-            <TouchableOpacity
-              key={i}
-              style={[st.newsRow, i === news.length - 1 && { borderBottomWidth: 0 }]}
-              onPress={() => router.push(n.route)}
-              activeOpacity={0.8}
-            >
-              {/* Real image thumbnail */}
-              <View style={st.newsThumb}>
-                <Image
-                  source={{ uri: n.imageUri }}
-                  style={st.newsThumbImg}
-                  resizeMode="cover"
-                />
-                {/* Tinted overlay */}
-                <View style={st.newsThumbOverlay} />
-              </View>
-              <View style={st.newsBody}>
-                <Text style={[st.newsTag, { color: n.tagColor }]}>{n.tag}</Text>
-                <Text style={st.newsTitle} numberOfLines={2}>{n.title}</Text>
-                <Text style={st.newsDate}>{n.date}</Text>
-              </View>
-              <Ionicons name="chevron-forward" size={14} color={colors.textThird} style={{ marginTop: 2 }} />
-            </TouchableOpacity>
-          ))}
+              {/* News rows - 5 most recent posts (excluding featured) */}
+              {latestPosts.map((post: WPPost) => {
+                const category = getPrimaryCategory(post);
+                const tagColor = getTagColor(category);
+                
+                return (
+                  <TouchableOpacity
+                    key={post.id}
+                    style={st.newsRow}
+                    onPress={() => handleNewsPress(post.id)}
+                    activeOpacity={0.8}
+                  >
+                    <View style={st.newsThumb}>
+                      <Image
+                        source={{ uri: getImageUrl(post) }}
+                        style={st.newsThumbImg}
+                        resizeMode="cover"
+                      />
+                      <View style={st.newsThumbOverlay} />
+                    </View>
+                    <View style={st.newsBody}>
+                      <Text style={[st.newsTag, { color: tagColor }]}>{category}</Text>
+                      <Text style={st.newsTitle} numberOfLines={2}>
+                        {stripHtml(post.title.rendered)}
+                      </Text>
+                      <Text style={st.newsDate}>{formatDate(post.date)}</Text>
+                    </View>
+                    <Ionicons name="chevron-forward" size={14} color={colors.textThird} style={{ marginTop: 2 }} />
+                  </TouchableOpacity>
+                );
+              })}
+            </>
+          )}
         </View>
         <View style={{ height: 24 }} />
       </ScrollView>
@@ -363,19 +430,6 @@ const st = StyleSheet.create({
     fontSize: 12, fontWeight: '800', color: colors.offwhite,
     letterSpacing: 2.5, textAlign: 'center', lineHeight: 19,
   },
-  agencySub: {
-    fontSize: 10, color: colors.textSecond, letterSpacing: 1.5,
-  },
-  liveBadge: {
-    flexDirection: 'row', alignItems: 'center', gap: 7,
-    backgroundColor: 'rgba(0,192,96,0.1)',
-    borderWidth: 1, borderColor: 'rgba(0,192,96,0.3)',
-    borderRadius: 6, paddingHorizontal: 12, paddingVertical: 5,
-    marginTop: 2,
-  },
-  liveText: {
-    fontSize: 10, fontWeight: '700', color: colors.green2, letterSpacing: 1,
-  },
 
   /* Feed */
   feed: { flex: 1, backgroundColor: colors.navy },
@@ -397,7 +451,50 @@ const st = StyleSheet.create({
     fontSize: 13, fontWeight: '600', color: colors.green2,
   },
 
-  /* Featured card — full-bleed photo */
+  /* Loading/Error/Empty states */
+  loadingContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 40,
+    gap: 12,
+  },
+  loadingText: {
+    color: colors.textThird,
+    fontSize: 14,
+  },
+  errorContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 40,
+    gap: 12,
+  },
+  errorText: {
+    color: colors.textThird,
+    fontSize: 14,
+  },
+  retryBtn: {
+    backgroundColor: colors.green2,
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderRadius: 6,
+    marginTop: 8,
+  },
+  retryBtnText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 13,
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 40,
+  },
+  emptyText: {
+    color: colors.textThird,
+    fontSize: 14,
+  },
+
+  /* Featured card */
   featCard: {
     borderRadius: 16,
     height: 200,
