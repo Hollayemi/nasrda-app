@@ -13,7 +13,7 @@ export function NasrdaaiScreen() {
         <View style={[st.root, { paddingTop: insets.top }]}>
             <View style={st.nav}>
                 <NavLogo />
-                <Text style={st.navTitle}>NAI</Text>
+                <Text style={st.navTitle}>NASRDA AI</Text>
                 <FontAwesome5 name="flask" size={17} color={colors.textThird} />
             </View>
 

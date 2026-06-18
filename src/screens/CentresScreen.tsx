@@ -36,7 +36,7 @@ const CENTRES: Centre[] = [
     code: 'CBSS',
     name: 'Centre for Basic Space Science',
     loc: 'Nsukka, Enugu',
-    accentColor: colors.green2,
+    accentColor: colors.sky,
     url: 'https://www.nasrdacbss.com',
     desc: `The Centre for Basic Space Science and Astronomy (CBSS), Nsukka was established in 2001 as one of the Activity Centres of the National Space Research and Development Agency (NASRDA) with Emeritus Prof. P. N. Okeke as the pioneer Director. From inception in 2001, the Centre operated from her temporal office at the Nsukka Campus of the University of Nigeria Nsukka (UNN) till 2019 when her research and administrative operations were moved to her permanent site at Eburummiri, Agu-Umuakashi, Nsukka.`,
     imageUri: NASRDA_LOGO_URI,
@@ -45,7 +45,7 @@ const CENTRES: Centre[] = [
     code: "ARCSSTEE",
     name: 'African Regional Centre for Space Science & Technology Education in English',
     loc: 'Ile-Ife, Osun',
-    accentColor: colors.gold,
+    accentColor: colors.sky,
     url: 'https://arcsste.org',
     desc: 'UN-affiliated regional centre offering postgraduate programmes in space science, remote sensing and GIS.',
     imageUri: NASRDA_LOGO_URI,
@@ -54,7 +54,7 @@ const CENTRES: Centre[] = [
     code: 'CGG',
     name: 'Centre for Geodesy & Geodynamics',
     loc: 'Toro, Bauchi',
-    accentColor: colors.gold,
+    accentColor: colors.sky,
     url: '',
     desc: 'The Centre for Geodesy and Geodynamics is to carryout earth observation research as well as monitor and predict geo-hazards using space geodetic and geophysical technique for sustainable national development.',
     imageUri: NASRDA_LOGO_URI,
@@ -63,7 +63,7 @@ const CENTRES: Centre[] = [
     code: 'CSTD',
     name: 'Centre for Satellite Technology Development',
     loc: 'Abuja, FCT',
-    accentColor: colors.green2,
+    accentColor: colors.sky,
     url: 'http://www.cstd.nasrda.gov.ng',
     desc: `The Centre for Satellite Technology Development (CSTD) is a key research and development center of the National Space Research and Development Agency (NASRDA), dedicated to advancing satellite technology in Nigeria. As a pioneer in space science and technology, CSTD is responsible for the design, development, testing, and integration of satellite systems that support national security, environmental monitoring, disaster management, and scientific research. CSTD has played a critical role in the design, development, and launch of Nigeria's satellites, such as NigeriaSat-1, NigeriaSat-2, NigeriaSat-X, and NigComSat-1R.`,
     imageUri: NASRDA_LOGO_URI,
@@ -72,7 +72,7 @@ const CENTRES: Centre[] = [
     code: 'CSTP',
     name: 'Centre for Space Transport & Propulsion',
     loc: 'Epe, Lagos',
-    accentColor: colors.gold,
+    accentColor: colors.sky,
     url: '',
     desc: `The Centre for Space Transport and Propulsion (CSTP), Epe, Lagos, was established on the 19th February, 2003, as one of the six activity Centres of National Space Research and Development Agency (NASRDA), Abuja. Nigeria. The Centre is charged with the responsibility of conducting fundamental Research and Development (R&D) in space transport vehicles and propulsion system.`,
     imageUri: NASRDA_LOGO_URI,
@@ -81,7 +81,7 @@ const CENTRES: Centre[] = [
     code: 'AIR',
     name: 'Atlantic International Research Centre',
     loc: 'Abuja, FCT',
-    accentColor: colors.green2,
+    accentColor: colors.sky,
     url: 'https://aircentre.org',
     desc: 'International research hub for climate science, oceanography and coastal resilience in the Atlantic region.',
     imageUri: NASRDA_LOGO_URI,
@@ -99,7 +99,7 @@ const CENTRES: Centre[] = [
     code: 'NCRS',
     name: 'National Centre for Remote Sensing',
     loc: 'Jos, Plateau',
-    accentColor: colors.green2,
+    accentColor: colors.sky,
     url: '',
     desc: `The National Centre for Remote Sensing (NCRS) specializes in geospatial data acquisition, processing, and application in various fields. NCRS is committed to being a Centre of excellence in the provision of Geo-informatic services for sustainable Development.`,
     imageUri: NASRDA_LOGO_URI,
@@ -108,7 +108,7 @@ const CENTRES: Centre[] = [
     code: 'CSID',
     name: 'Centre for Space Incubation Development',
     loc: 'Abuja, FCT',
-    accentColor: colors.gold,
+    accentColor: colors.sky,
     url: '',
     desc: `The Centre For Space Innovation & Development (CSID), is involved in advancing space-related research and innovation. The center focuses on developing new space technologies, collaborating with international partners, and contributing to Nigeria's national development goals.`,
     imageUri: NASRDA_LOGO_URI,
@@ -126,7 +126,7 @@ const CENTRES: Centre[] = [
     code: 'CSLS',
     name: 'Centre for Space Life Science',
     loc: 'Ibadan, Oyo State',
-    accentColor: colors.gold,
+    accentColor: colors.sky,
     url: '',
     desc: `The Centre for Space Life Sciences (CSLS) at the University of Ibadan, Oyo State, Nigeria, is a newly established research and training institution inaugurated on December 2, 2025, focusing on critical challenges related to human health, biological systems and life-support infrastructure in space.`,
     imageUri: NASRDA_LOGO_URI,
@@ -135,7 +135,7 @@ const CENTRES: Centre[] = [
     code: 'CCCF',
     name: 'Centre for Space-Based Climate Change and Food Security',
     loc: 'Mubi, Adamawa',
-    accentColor: colors.green2,
+    accentColor: colors.sky,
     url: '',
     desc: "The Centre for Space-Based Climate and Food Security (CCCF) is in Mubi, Adamawa State, focusing on climate monitoring and food security applications using space technology.",
     imageUri: NASRDA_LOGO_URI,
@@ -171,22 +171,64 @@ const nasrdaLaboratories: Laboratory[] = [
     location: "Uburu, Ebonyi State",
   },
   {
-    acronym: "ZASTAL",
+    acronym: "COPINE",
+    labName: "Cooperative Information Network (COPINE)",
+    information: "COPINE is part of National Space Research and Development Agency (NASRDA); and we are mandated by the Federal Governmnent of Nigeria to use Satellite based Remote Sensing and Geographic Information System (RS/GIS) technology for natural resource management and optimization of our clients’ organizational and business capacities.",
+    location: "Ile-ife, Osun State",
+  },
+  {
+    acronym: "AACEL",
+    labName: "Advanced Aircraft Engineering Laboratory",
+    information: "The Advanced Aircraft Engineering Laboratory (AACEL), also referred to as AACELab, in Zamfara State, is a facility focused on advanced research and development in aircraft engineering. It aims to enhance Nigeria’s capabilities in civil aviation, including aircraft maintenance and manufacturing.",
+    location: "Zamfara State",
+  },
+  {
+    acronym: "SCRD",
+    labName: "Space Composite Material Resaerch & Development",
+    information: "The Space Composite Material Research & Development (SCRD) in Kwara State focuses on composite material development for aerospace applications.",
+    location: "Kwara State",
+  },
+  {
+    acronym: "ANEOL",
+    labName: "Advanced Near Earth Object Laboratory",
+    information: "The Advanced Near Earth Object Laboratory (ANEOL) is in Owerri,Imo State.",
+    location: "Owerri, Imo State",
+  },
+  {
+    acronym: "AAQL",
+    labName: "Advanced Air Quality Laboratory",
+    information: " ",
+    location: "Akungba-Akoko, Ondo State",
+  },
+  {
+    acronym: "ASERL",
+    labName: "Advanced Space Environmental Research Laboratory",
+    information: "Advanced Space Environmental Research Laboratory (ASERL) Edo State",
+    location: "Edo State",
+  },
+  {
+    acronym: "ASCOLAB",
+    labName: "Space Composite Material Research and Development Laboratory",
+    information: "Space Composite Material Research and Development Laboratory (ASCOLAB) Kwara State",
+    location: "Kwara State",
+  },
+  {
+    acronym: "ZASTAL-G",
     labName: "Zonal Advanced Space Technology Application Laboratory",
     information: "Regional laboratory established to advance space technology applications, research, innovation, and capacity building for the North-East region.",
     location: "Kashere, Gombe State",
   },
   {
-    acronym: "ZASTAL",
+    acronym: "ZASTAL-K",
     labName: "Zonal Advanced Space Technology Application Laboratory",
     information: "Regional laboratory established to advance space technology applications, research, innovation, and capacity building for the North-West region.",
     location: "Kano, Kano State",
   },
   {
-    acronym: "ZASTAL",
-    labName: "Zonal Advanced Space Technology Application Laboratory",
+    acronym: "ZATL",
+    labName: "Zonal Advanced Technology Application Laboratory",
     information: "Regional laboratory established to advance space technology applications, research, innovation, and capacity building for the South-East region.",
-    location: "Ndufu-Alike, Ebonyi State",
+    location: "Ebonyi State",
   },
   {
     acronym: "ZASTAL",
@@ -230,14 +272,9 @@ const CentreCard: React.FC<{ c: Centre }> = ({ c }) => (
 );
 
 const LaboratoryCard: React.FC<{ lab: Laboratory; index: number }> = ({ lab, index }) => {
-  // Generate a consistent color based on acronym
-  const getColor = (acronym: string) => {
-    const colors_list = [colors.sky, colors.green2, colors.gold];
-    const hash = acronym.charCodeAt(0) || 0;
-    return colors_list[hash % colors_list.length];
-  };
+  // Generate a consistent color based on acrony
   
-  const labColor = getColor(lab.acronym);
+  const labColor = colors.green2;
   
   return (
     <View style={st.card}>
@@ -276,15 +313,15 @@ export const CentresScreen: React.FC = () => {
   };
 
   const getTitle = () => {
-    if (activeTab === 'centres') return 'ALL ACTIVITY CENTRES';
-    return 'ALL RESEARCH LABORATORIES';
+    if (activeTab === 'centres') return 'ACTIVITY CENTRES';
+    return 'RESEARCH LABORATORIES';
   };
 
   return (
     <View style={[st.root, { paddingTop: insets.top }]}>
       <View style={st.nav}>
         <NavLogo />
-        <Text style={st.navTitle}>Centres & Labs</Text>
+        <Text style={st.navTitle}>Activity Centres And Labs</Text>
         <FontAwesome5 name="flask" size={17} color={colors.textThird} />
       </View>
 

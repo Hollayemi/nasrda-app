@@ -60,10 +60,9 @@ export default function NewsDetailScreen() {
 
   return (
     <ScrollView 
-      style={[styles.container, { paddingTop: insets.top }]}
+      style={[styles.container, { paddingTop: 0}]}
       showsVerticalScrollIndicator={false}
     >
-      {/* Back button */}
       <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
         <Ionicons name="arrow-back" size={24} color={colors.textPrimary} />
       </TouchableOpacity>
@@ -145,7 +144,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: 'absolute',
-    top: 20,
+    top: 40,
     left: 16,
     zIndex: 10,
     backgroundColor: 'rgba(0,0,0,0.5)',
@@ -153,7 +152,7 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   backBtn: {
-    marginTop: 16,
+    marginTop: 46,
     backgroundColor: colors.green2,
     paddingHorizontal: 24,
     paddingVertical: 10,
@@ -165,7 +164,7 @@ const styles = StyleSheet.create({
   },
   featuredImage: {
     width: '100%',
-    height: 240,
+    height: 340,
   },
   content: {
     padding: 20,

@@ -51,13 +51,13 @@ const getImageUrl = (post: WPPost): string => {
     // Fallback to default NASRDA image
     return 'https://central.nasrda.gov.ng/wp-content/uploads/2025/04/NASRDA_Gate1.jpg';
   }
-  
+
   // Try to get a medium/large size first
   const sizes = media.media_details?.sizes;
   if (sizes?.large?.source_url) return sizes.large.source_url;
   if (sizes?.medium?.source_url) return sizes.medium.source_url;
   if (sizes?.thumbnail?.source_url) return sizes.thumbnail.source_url;
-  
+
   return media.source_url;
 };
 
@@ -72,11 +72,11 @@ const formatDate = (dateString: string): string => {
   const now = new Date();
   const diffTime = Math.abs(now.getTime() - date.getTime());
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  
+
   if (diffDays === 1) return 'Yesterday';
   if (diffDays < 7) return `${diffDays} days ago`;
   if (diffDays < 30) return `${Math.floor(diffDays / 7)} week${Math.floor(diffDays / 7) !== 1 ? 's' : ''} ago`;
-  
+
   return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
 };
 
@@ -220,13 +220,20 @@ const Stars: React.FC = () => {
   );
 };
 
-/* ─── HomeScreen ────────────────────────────────────────────── */
 export const HomeScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
+  const scrollY = useRef(new Animated.Value(0)).current;
+
+  const headerOpacity = scrollY.interpolate({
+    inputRange: [0, 150],
+    outputRange: [0, 1],
+    extrapolate: 'clamp',
+  });
+
   const router = useRouter();
 
   const { data: posts, isLoading, isError, refetch } = useGetPostsQuery();
-  
+
   // Get only the 6 most recent posts
   const recentPosts = posts && Array.isArray(posts) ? posts.slice(0, 6) : [];
   const featuredPost = recentPosts[0];
@@ -237,8 +244,8 @@ export const HomeScreen: React.FC = () => {
   };
 
   return (
-    <View style={[st.root, { paddingTop: insets.top }]}>
-      <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
+    <View style={[st.root]}>
+      {/* <StatusBar barStyle="light-content" translucent backgroundColor="transparent" /> */}
       <ScrollView
         style={st.feed}
         showsVerticalScrollIndicator={false}
@@ -246,18 +253,21 @@ export const HomeScreen: React.FC = () => {
           <RefreshControl refreshing={isLoading} onRefresh={refetch} tintColor={colors.green2} />
         }
       >
+        <Animated.View style={[st.headerBar, { opacity: headerOpacity, paddingTop: insets.top }]}>
+          <Text style={st.headerTitle}>About NASRDA</Text>
+        </Animated.View>
         {/* ── Hero ── */}
         <View style={st.hero}>
           <Stars />
 
           {/* Top actions */}
-          <View style={st.topBar}>
-            <TouchableOpacity style={st.topBtn}>
-              <Ionicons name="notifications-outline" size={20} color="rgba(232,240,248,0.8)" />
+          <View style={[st.topBar, { paddingTop: insets.top }]}>
+            <TouchableOpacity onPress={() => router.push('/about')} style={st.topBtn}>
+              <Ionicons name="information" size={20} color="rgba(232,240,248,0.8)" />
             </TouchableOpacity>
-            <TouchableOpacity style={st.topBtn}>
+            {/* <TouchableOpacity style={st.topBtn}>
               <Ionicons name="search-outline" size={20} color="rgba(232,240,248,0.8)" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
 
           {/* Orbit system */}
@@ -347,7 +357,7 @@ export const HomeScreen: React.FC = () => {
               {latestPosts.map((post: WPPost) => {
                 const category = getPrimaryCategory(post);
                 const tagColor = getTagColor(category);
-                
+
                 return (
                   <TouchableOpacity
                     key={post.id}
@@ -388,10 +398,28 @@ export default HomeScreen;
 /* ── Styles ──────────────────────────────────────────────────── */
 const st = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.navy },
+  headerBar: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'rgba(8,18,38,0.95)',
+    paddingBottom: 12,
+    paddingHorizontal: 20,
+    zIndex: 100,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0,166,81,0.2)',
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#fff',
+    textAlign: 'center',
+  },
 
   /* Hero */
   hero: {
-    height: 430,
+    height: 450,
     backgroundColor: colors.navy2,
     alignItems: 'center',
     justifyContent: 'center',

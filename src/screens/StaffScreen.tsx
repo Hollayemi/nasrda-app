@@ -5,7 +5,7 @@ import {
   Button,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons, Feather, FontAwesome5 } from '@expo/vector-icons';
 import { NavLogo, NASRDA_LOGO_URI } from '../components/NavLogo';
 import { colors } from '../theme';
 
@@ -143,32 +143,141 @@ const ChatScreen: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
   );
 };
 
-const DashboardScreen: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: -40 }}>
-      <Text style={{ fontSize: 18, color: colors.textPrimary }}>Welcome to the NASRDA Staff Portal</Text>
-      <Text style={{ fontSize: 14, color: colors.textSecond, marginTop: 8 }}>
-        Access internal communications, mission data, and more.
-      </Text>
-      
+/* ── Dashboard Cards ─────────────────────────────────────────── */
+const DashboardCard: React.FC<{
+  icon: React.ReactNode;
+  title: string;
+  subtitle: string;
+  onPress: () => void;
+  badge?: string;
+  gradient?: boolean;
+}> = ({ icon, title, subtitle, onPress, badge, gradient }) => (
+  <TouchableOpacity 
+    style={[st.dashboardCard, gradient && st.dashboardCardGradient]} 
+    onPress={onPress}
+    activeOpacity={0.85}
+  >
+    <View style={st.cardHeader}>
+      <View style={st.cardIconContainer}>
+        {icon}
+      </View>
+      {badge && (
+        <View style={st.cardBadge}>
+          <Text style={st.cardBadgeText}>{badge}</Text>
+        </View>
+      )}
+    </View>
+    <Text style={st.cardTitle}>{title}</Text>
+    <Text style={st.cardSubtitle}>{subtitle}</Text>
+    <View style={st.cardFooter}>
+      <Text style={st.cardActionText}>Access →</Text>
+    </View>
+  </TouchableOpacity>
+);
 
-      {/* Buttton For Account Settings, Staff Email, Chat  */}
-      <View style={{ marginTop: 60, gap: 12 }}>
-        <View style={st.actionSettingsBtn}>
-          <Text style={st.actionSettingsTxt} onPress={() => alert('Account settings coming soon!')} >Account Settings</Text>
+const DashboardScreen: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
+  const insets = useSafeAreaInsets();
+
+  return (
+    <ScrollView 
+      style={st.dashboardContainer}
+      contentContainerStyle={[st.dashboardContent, { paddingBottom: insets.bottom + 20 }]}
+      showsVerticalScrollIndicator={false}
+    >
+      {/* Welcome Section */}
+      <View style={st.welcomeSection}>
+        <View>
+          <Text style={st.welcomeGreeting}>Good Morning,</Text>
+          <Text style={st.welcomeName}>Dr. Jude Adeleke</Text>
+          <Text style={st.welcomeDept}>AssistanT Director, ICT.</Text>
         </View>
-        <View style={st.staffEmailBtn}>
-          <Text style={st.staffEmailTxt} onPress={() => alert('Chat feature coming soon!')}>Staff Email</Text>
+        <TouchableOpacity onPress={onLogout} style={st.headerLogoutBtn}>
+          <Ionicons name="log-out-outline" size={20} color={colors.textSecond} />
+        </TouchableOpacity>
+      </View>
+
+      {/* Quick Stats */}
+      <View style={st.quickStats}>
+        <View style={st.statItem}>
+          <Text style={st.statNumber}>14</Text>
+          <Text style={st.statLabel}>Staff Online</Text>
         </View>
-        <View style={st.staffChatBtn}>
-          <Text style={st.staffChatTxt} onPress={() => alert('Chat feature coming soon!')}>Staff Chat</Text>
+        <View style={st.statDivider} />
+        <View style={st.statItem}>
+          <Text style={st.statNumber}>3</Text>
+          <Text style={st.statLabel}>Pending Tasks</Text>
+        </View>
+        <View style={st.statDivider} />
+        <View style={st.statItem}>
+          <Text style={st.statNumber}>2</Text>
+          <Text style={st.statLabel}>New Messages</Text>
         </View>
       </View>
 
-      <TouchableOpacity onPress={onLogout} style={st.logoutBtn}>
-        <Ionicons name="log-out-outline" size={20} color={colors.textThird} />
-      </TouchableOpacity>
-    </View>
+      {/* Dashboard Cards Grid */}
+      <View style={st.cardsGrid}>
+        {/* Staff Email Card */}
+        <DashboardCard
+          icon={<Ionicons name="mail-outline" size={28} color="#fff" />}
+          title="Staff Email"
+          subtitle="Access your official NASRDA email communications"
+          onPress={() => alert('Opening Staff Email...')}
+          badge="12 unread"
+        />
+
+        {/* Account Settings Card */}
+        <DashboardCard
+          icon={<Ionicons name="settings-outline" size={28} color="#fff" />}
+          title="Account Settings"
+          subtitle="Manage your profile, security, and preferences"
+          onPress={() => alert('Opening Account Settings...')}
+          gradient={true}
+        />
+
+        {/* Staff Chat Card */}
+        <DashboardCard
+          icon={<Ionicons name="chatbubbles-outline" size={28} color="#fff" />}
+          title="Staff Chat"
+          subtitle="Connect with colleagues across all divisions"
+          onPress={() => alert('Opening Staff Chat...')}
+          badge="2 new"
+        />
+
+        {/* Additional Feature Cards */}
+        <DashboardCard
+          icon={<Feather name="calendar" size={28} color="#fff" />}
+          title="Staff Calendar"
+          subtitle="View meetings, events, and mission schedules"
+          onPress={() => alert('Opening Staff Calendar...')}
+        />
+
+        <DashboardCard
+          icon={<FontAwesome5 name="folder-open" size={24} color="#fff" />}
+          title="Document Hub"
+          subtitle="Access NASRDA policies, reports, and resources"
+          onPress={() => alert('Opening Document Hub...')}
+        />
+
+        <DashboardCard
+          icon={<Feather name="users" size={28} color="#fff" />}
+          title="Staff Directory"
+          subtitle="Find colleagues across NASRDA departments"
+          onPress={() => alert('Opening Staff Directory...')}
+        />
+      </View>
+
+      {/* Recent Activity */}
+      <View style={st.recentActivity}>
+        <Text style={st.recentTitle}>Recent Activity</Text>
+        <View style={st.activityItem}>
+          <View style={st.activityDot} />
+          <View style={st.activityContent}>
+            <Text style={st.activityText}>Dr. Jude. Adeleke shared a document in Media & Comms</Text>
+            <Text style={st.activityTime}>2 hours ago</Text>
+          </View>
+        </View>
+      </View>
+    </ScrollView>
   );
 };
 
@@ -262,24 +371,192 @@ const st = StyleSheet.create({
   },
   secNoteTxt: { fontSize: 11, color: colors.textThird },
 
-  // dashboard action buttons
-  actionSettingsBtn: { backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 10, padding: 12, borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)' },
-  actionSettingsTxt: { fontSize: 13, fontWeight: 900, color: colors.textPrimary, paddingHorizontal: 10, textAlign: 'center' },
-
-  // staff Email Button
-  staffEmailBtn: {
-    backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 10,
-    borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)',
-    paddingVertical: 12, paddingHorizontal: 20,
+  /* Dashboard Container */
+  dashboardContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(10,22,40,0.95)',
   },
-  staffEmailTxt: { fontSize: 13, fontWeight: 900, color: colors.textPrimary, textAlign: 'center' },
-
-  staffChatBtn: {
-    backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 10,
-    borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)',
-    paddingVertical: 12, paddingHorizontal: 20,
+  dashboardContent: {
+    paddingHorizontal: 15,
+    paddingTop: 20,
   },
-  staffChatTxt: { fontSize: 13, fontWeight: 900, color: colors.textPrimary, textAlign: 'center' },
+
+  /* Welcome Section */
+  welcomeSection: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 24,
+  },
+  welcomeGreeting: {
+    fontSize: 14,
+    color: colors.textSecond,
+    marginBottom: 2,
+  },
+  welcomeName: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#fff',
+    marginBottom: 2,
+  },
+  welcomeDept: {
+    fontSize: 13,
+    color: colors.green2,
+    fontWeight: '600',
+  },
+  headerLogoutBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
+  },
+
+  /* Quick Stats */
+  quickStats: {
+    flexDirection: 'row',
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    borderRadius: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 10,
+    marginBottom: 28,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.06)',
+  },
+  statItem: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  statNumber: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#fff',
+    marginBottom: 2,
+  },
+  statLabel: {
+    fontSize: 11,
+    color: colors.textSecond,
+  },
+  statDivider: {
+    width: 1,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+  },
+
+  /* Cards Grid */
+  cardsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginBottom: 28,
+  },
+
+  /* Dashboard Card */
+  dashboardCard: {
+    width: '48%',
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
+    minHeight: 140,
+    justifyContent: 'space-between',
+  },
+  dashboardCardGradient: {
+    backgroundColor: 'rgba(0,166,81,0.15)',
+    borderColor: 'rgba(0,166,81,0.3)',
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 12,
+  },
+  cardIconContainer: {
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    backgroundColor: 'rgba(0,166,81,0.2)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cardBadge: {
+    backgroundColor: '#e74c3c',
+    borderRadius: 12,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+  },
+  cardBadgeText: {
+    fontSize: 9,
+    color: '#fff',
+    fontWeight: '700',
+  },
+  cardTitle: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#fff',
+    marginBottom: 4,
+  },
+  cardSubtitle: {
+    fontSize: 11,
+    color: colors.textSecond,
+    lineHeight: 16,
+    marginBottom: 8,
+  },
+  cardFooter: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  cardActionText: {
+    fontSize: 12,
+    color: colors.green2,
+    fontWeight: '600',
+  },
+
+  /* Recent Activity */
+  recentActivity: {
+    backgroundColor: 'rgba(255,255,255,0.04)',
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.06)',
+    marginBottom: 20,
+  },
+  recentTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#fff',
+    marginBottom: 16,
+  },
+  activityItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 14,
+  },
+  activityDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#3498db',
+    marginRight: 12,
+    marginTop: 4,
+  },
+  activityContent: {
+    flex: 1,
+  },
+  activityText: {
+    fontSize: 13,
+    color: colors.textPrimary,
+    lineHeight: 18,
+    marginBottom: 2,
+  },
+  activityTime: {
+    fontSize: 11,
+    color: colors.textThird,
+  },
 
   /* Chat */
   chatHeader: {

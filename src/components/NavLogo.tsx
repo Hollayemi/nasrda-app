@@ -8,7 +8,7 @@ export const NavLogo: React.FC<{ height?: number }> = ({ height = 28 }) => (
   <View style={[styles.pill, { height: height + 8 }]}>
     <Image
       source={{ uri: NASRDA_LOGO_URI }}
-      style={{ width: height * 1.5, height }}
+      style={{ width: height, height }}
       resizeMode="contain"
     />
   </View>
@@ -16,9 +16,9 @@ export const NavLogo: React.FC<{ height?: number }> = ({ height = 28 }) => (
 
 const styles = StyleSheet.create({
   pill: {
-    backgroundColor: '#FFFFFF',
+    // backgroundColor: '#FFFFFF',
     borderRadius: 8,
-    paddingHorizontal: 6,
+    // paddingHorizontal: 2,
     alignItems: 'center',
     justifyContent: 'center',
   },

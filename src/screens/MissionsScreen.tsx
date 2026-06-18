@@ -61,9 +61,9 @@ const MISSIONS: Mission[] = [
   {
     name: 'Nigeria EduSAT',
     desc: 'Educational satellite · Supporting STEM across Nigeria',
-    status: 'PLANNED',
-    group: 'dev',
-    accentColor: colors.gold,
+    status: 'LIVE',
+    group: 'active',
+    accentColor: colors.green,
     imageUri: SAT_IMAGES.edusat,
     sourceUrl: 'https://central.nasrda.gov.ng/space-missions/nigeria-edusat/',
     launched: 'TBD',
@@ -250,7 +250,7 @@ const MissionCard: React.FC<{ m: Mission; onPress: () => void }> = ({ m, onPress
 type GroupDef = { key: 'active' | 'dev' | 'retired'; label: string; labelColor: string };
 const GROUPS: GroupDef[] = [
   { key: 'active',  label: 'ACTIVE SATELLITES', labelColor: colors.green2 },
-  { key: 'dev',     label: 'IN DEVELOPMENT',    labelColor: colors.gold },
+  // { key: 'dev',     label: 'IN DEVELOPMENT',    labelColor: colors.gol d },
   { key: 'retired', label: 'RETIRED MISSIONS',  labelColor: colors.textThird },
 ];
 
@@ -272,8 +272,8 @@ export const MissionsScreen: React.FC = () => {
         {/* Stats strip */}
         <View style={st.statsRow}>
           {([
-            { n: '2', l: 'Active',  color: colors.green2 },
-            { n: '1', l: 'Planned', color: colors.gold },
+            { n: '3', l: 'Active',  color: colors.green2 },
+            { n: '4', l: 'Planned', color: colors.gold },
             { n: '3', l: 'Retired', color: colors.textThird },
           ] as const).map(({ n, l, color }, i) => (
             <View key={i} style={st.statBox}>

@@ -31,11 +31,11 @@ const TABS: TabDef[] = [
     label: 'Centres',
     icon: (f) => <FontAwesome5 name="flask" size={19} color={f ? colors.green2 : colors.textThird} />,
   },
-   {
-    name: 'news',
-    label: 'News',
-    icon: (f) => <Ionicons name={f ? 'newspaper' : 'newspaper-outline'} size={22} color={f ? colors.green2 : colors.textThird} />,
-  },
+  //  {
+  //   name: 'news',
+  //   label: 'News',
+  //   icon: (f) => <Ionicons name={f ? 'newspaper' : 'newspaper-outline'} size={22} color={f ? colors.green2 : colors.textThird} />,
+  // },
   {
     name: 'staff',
     label: 'Staff',
@@ -61,7 +61,9 @@ function CustomTabBar({ state, navigation }: BottomTabBarProps) {
         const focused = state.index === i;
         const tab = TABS[i];
 
-        return (
+        console.log(tab)
+
+        return tab && (
           <TouchableOpacity
             key={route.key}
             style={st.tabItem}
@@ -91,7 +93,7 @@ export default function TabLayout() {
       <Tabs.Screen name="index"    options={{ title: 'Home' }} />
       <Tabs.Screen name="missions" options={{ title: 'Missions' }} />
       <Tabs.Screen name="centres"  options={{ title: 'Centres' }} />
-      <Tabs.Screen name="news"     options={{ title: 'News' }} />
+      {/* <Tabs.Screen name="news"     options={{ title: 'News' }} /> */}
       <Tabs.Screen name="staff"    options={{ title: 'Staff' }} />
       <Tabs.Screen name="nai"      options={{ title: 'AI' }} />
     </Tabs>
@@ -109,10 +111,10 @@ const st = StyleSheet.create({
     }),
   },
   topAccent: {
-    // position: 'absolute',
-    // top: 0, left: 0, right: 0,
-    // height: 1,
-    // backgroundColor: 'rgba(0,192,96,0.3)',
+    position: 'absolute',
+    top: 0, left: 0, right: 0,
+    height: 1,
+    backgroundColor: 'rgba(0,192,96,0.3)',
   },
   tabItem: {
     flex: 1,
